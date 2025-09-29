@@ -1,0 +1,82 @@
+
+.hero {
+   position: relative;
+  min-height: 100vh; /* ocupa toda la pantalla al entrar */
+  background: url("https://www.youtube.com/watch?v=BI9fgQY0d5I") no-repeat center center/cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: white;
+  
+}
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* oscurece la imagen para mejor contraste */
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+}
+
+    .news-card img {
+      object-fit: cover;
+      height: 200px;
+    }
+    .platforms img {
+      max-height: 40px;
+      margin-right: 10px;
+    }
+    .footer {
+      background: #111;
+      color: #ccc;
+      padding: 40px 0;
+    }
+    .footer a {
+      color: #ccc;
+      text-decoration: none;
+    }
+    .footer a:hover {
+      color: white;
+    }
+
+
+    /* Fondo general oscuro */
+body {
+  background-color: #000; /* Negro */
+  color: #fff; /* Texto blanco */
+}
+
+/* Cards en oscuro */
+.card {
+  background-color: #1a1a1a; /* gris muy oscuro */
+  color: #fff; /* texto blanco */
+  border: 1px solid #333; /* borde sutil */
+}
+
+/* Botones en oscuro */
+.card .btn-outline-primary {
+  color: #fff;
+  border-color: #fff;
+}
+.card .btn-outline-primary:hover {
+  background-color: #fff;
+  color: #000;
+}
+
+/* Noticias en oscuro */
+.news-card {
+  background-color: #1a1a1a;
+  color: #fff;
+}
+.news-card .btn-link {
+  color: #0d6efd; /* azul bootstrap */
+}
+.news-card .btn-link:hover {
+  color: #66aaff;
+}
