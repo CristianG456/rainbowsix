@@ -1,0 +1,433 @@
+-- phpMyAdmin SQL Dump
+-- version 5.2.1
+-- https://www.phpmyadmin.net/
+--
+-- Servidor: 127.0.0.1
+-- Tiempo de generación: 30-09-2025 a las 07:12:35
+-- Versión del servidor: 10.4.32-MariaDB
+-- Versión de PHP: 8.2.12
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Base de datos: `raimbowsix`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `armas`
+--
+
+CREATE TABLE `armas` (
+  `id_arma` int(11) NOT NULL,
+  `nomb_arma` text NOT NULL,
+  `daño_cabeza` int(11) NOT NULL,
+  `daño_torso` int(11) NOT NULL,
+  `id_tipo_arma` int(11) NOT NULL,
+  `cant_balas` int(11) DEFAULT NULL,
+  `img_arma` varchar(500) NOT NULL,
+  `id_nivel_arma` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `avatar`
+--
+
+CREATE TABLE `avatar` (
+  `id_avatar` int(11) NOT NULL,
+  `nomb_avat` text NOT NULL,
+  `url` varchar(500) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `avatar`
+--
+
+INSERT INTO `avatar` (`id_avatar`, `nomb_avat`, `url`) VALUES
+(1, 'Skopós', 'https://static.wikia.nocookie.net/rainbowsix/images/4/4c/R6Skopos_render.png/revision/latest?cb=20250625090832'),
+(2, 'Deimos', 'https://static.wikia.nocookie.net/rainbowsix/images/5/55/R6S_Deimos_Full_Render.png/revision/latest?cb=20240303164226'),
+(3, 'Nokk', 'https://static.wikia.nocookie.net/rainbowsix/images/8/81/N%C3%B8kk_-_Full_Body.png/revision/latest?cb=20190612000127'),
+(4, 'Ace', 'https://static.wikia.nocookie.net/rainbowsix/images/a/a6/Ace_-_Full_Body.png/revision/latest?cb=20200519185439');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `detalle_usuario_partida`
+--
+
+CREATE TABLE `detalle_usuario_partida` (
+  `id_usuario_partida` int(11) NOT NULL,
+  `puntos_total` int(11) NOT NULL,
+  `id_usuario1` int(11) NOT NULL,
+  `id_usuario2` int(11) NOT NULL,
+  `id_partida` int(11) NOT NULL,
+  `id_arma` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `estado`
+--
+
+CREATE TABLE `estado` (
+  `id_estado` int(11) NOT NULL,
+  `estado` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `estado`
+--
+
+INSERT INTO `estado` (`id_estado`, `estado`) VALUES
+(1, 'ACTIVO'),
+(2, 'BLOQUEADO'),
+(3, 'ABIERTO'),
+(4, 'CERRADO'),
+(5, 'EN JUEGO');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `mundo`
+--
+
+CREATE TABLE `mundo` (
+  `id_mundo` int(11) NOT NULL,
+  `nomb_mundo` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `mundo`
+--
+
+INSERT INTO `mundo` (`id_mundo`, `nomb_mundo`) VALUES
+(1, 'MUNDO PRINCIPIANTE'),
+(2, 'MUNDO AVANZADO');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `nivel`
+--
+
+CREATE TABLE `nivel` (
+  `id_nivel` int(11) NOT NULL,
+  `nomb_nivel` varchar(500) NOT NULL,
+  `puntos_nivel` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `nivel`
+--
+
+INSERT INTO `nivel` (`id_nivel`, `nomb_nivel`, `puntos_nivel`) VALUES
+(1, 'Bronce', 0),
+(2, 'Plata', 250),
+(3, 'Oro', 500),
+(4, 'Diamante', 750);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `partida`
+--
+
+CREATE TABLE `partida` (
+  `id_partida` int(11) NOT NULL,
+  `fecha_inicio` datetime NOT NULL,
+  `fecha_fin` datetime NOT NULL,
+  `cantidad_jug` int(11) NOT NULL,
+  `id_estado_part` int(11) NOT NULL,
+  `id_sala` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `rol`
+--
+
+CREATE TABLE `rol` (
+  `id_rol` int(11) NOT NULL,
+  `nom_rol` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `rol`
+--
+
+INSERT INTO `rol` (`id_rol`, `nom_rol`) VALUES
+(1, 'ADMINISTRADOR'),
+(2, 'JUGADOR');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `sala`
+--
+
+CREATE TABLE `sala` (
+  `id_sala` int(11) NOT NULL,
+  `num_sala` int(11) NOT NULL,
+  `fecha_creacion` datetime NOT NULL,
+  `img_sala` varchar(500) NOT NULL,
+  `id_estado_sala` int(11) NOT NULL,
+  `id_mundo` int(11) NOT NULL,
+  `id_nivel` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tipo_arma`
+--
+
+CREATE TABLE `tipo_arma` (
+  `id_tipo_arma` int(11) NOT NULL,
+  `tipo_arma` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `usuario`
+--
+
+CREATE TABLE `usuario` (
+  `id_usuario` int(11) NOT NULL,
+  `nomb_usu` text NOT NULL,
+  `contra_usu` varchar(500) NOT NULL,
+  `correo` varchar(250) NOT NULL,
+  `vida` int(11) NOT NULL,
+  `ultimo_ingreso` datetime NOT NULL,
+  `id_avatar` int(11) DEFAULT NULL,
+  `id_rol` int(11) NOT NULL,
+  `id_nivel` int(11) NOT NULL,
+  `id_estado_usu` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `usuario`
+--
+
+INSERT INTO `usuario` (`id_usuario`, `nomb_usu`, `contra_usu`, `correo`, `vida`, `ultimo_ingreso`, `id_avatar`, `id_rol`, `id_nivel`, `id_estado_usu`) VALUES
+(3, 'kevin1', '$2y$05$fSw5EsGzaKGmxvFW0U1v4.IoyUmxgLQ2BJhaPtBN69LAPzwMhS0y6', 'prueba1@gmail.com', 200, '2025-09-29 23:42:11', NULL, 2, 1, 2),
+(4, 'kevin2', '$2y$05$CAogpD6U6PNmLJ5UyFQBAe7psQ2G04NRw3A2jnHFe4Q7XalCLy/1u', 'prueba@gmail.com', 200, '2025-09-29 23:49:00', NULL, 2, 1, 2),
+(5, 'admin1', '$2y$05$tev8R65QSkIbN/Q9mCrqGua9U5ETvGkwm8SYYJLl4ivbCniMjf22G', 'admin1@gmail.com', 200, '2025-09-30 00:10:35', NULL, 1, 1, 2),
+(6, 'admin2', '$2y$05$S7rJ1au/Ixbit.d5j/.fq.MPv63ln6fU7hlym56wWGr3F3U4eeKkm', 'admin2@gmail.com', 200, '2025-09-30 00:10:46', NULL, 1, 1, 2);
+
+--
+-- Índices para tablas volcadas
+--
+
+--
+-- Indices de la tabla `armas`
+--
+ALTER TABLE `armas`
+  ADD PRIMARY KEY (`id_arma`),
+  ADD KEY `id_nivel` (`id_nivel_arma`),
+  ADD KEY `id_tipo_arma` (`id_tipo_arma`);
+
+--
+-- Indices de la tabla `avatar`
+--
+ALTER TABLE `avatar`
+  ADD PRIMARY KEY (`id_avatar`);
+
+--
+-- Indices de la tabla `detalle_usuario_partida`
+--
+ALTER TABLE `detalle_usuario_partida`
+  ADD PRIMARY KEY (`id_usuario_partida`),
+  ADD KEY `id_usuario` (`id_usuario1`),
+  ADD KEY `id_usuario2` (`id_usuario2`),
+  ADD KEY `id_partida` (`id_partida`),
+  ADD KEY `id_arma` (`id_arma`);
+
+--
+-- Indices de la tabla `estado`
+--
+ALTER TABLE `estado`
+  ADD PRIMARY KEY (`id_estado`);
+
+--
+-- Indices de la tabla `mundo`
+--
+ALTER TABLE `mundo`
+  ADD PRIMARY KEY (`id_mundo`);
+
+--
+-- Indices de la tabla `nivel`
+--
+ALTER TABLE `nivel`
+  ADD PRIMARY KEY (`id_nivel`);
+
+--
+-- Indices de la tabla `partida`
+--
+ALTER TABLE `partida`
+  ADD PRIMARY KEY (`id_partida`),
+  ADD KEY `id_sala` (`id_sala`),
+  ADD KEY `id_estado_part` (`id_estado_part`);
+
+--
+-- Indices de la tabla `rol`
+--
+ALTER TABLE `rol`
+  ADD PRIMARY KEY (`id_rol`);
+
+--
+-- Indices de la tabla `sala`
+--
+ALTER TABLE `sala`
+  ADD PRIMARY KEY (`id_sala`),
+  ADD KEY `id_mundo` (`id_mundo`),
+  ADD KEY `id_nivel` (`id_nivel`),
+  ADD KEY `id_estado` (`id_estado_sala`);
+
+--
+-- Indices de la tabla `tipo_arma`
+--
+ALTER TABLE `tipo_arma`
+  ADD PRIMARY KEY (`id_tipo_arma`);
+
+--
+-- Indices de la tabla `usuario`
+--
+ALTER TABLE `usuario`
+  ADD PRIMARY KEY (`id_usuario`),
+  ADD KEY `id_rol` (`id_rol`),
+  ADD KEY `id_nivel` (`id_nivel`),
+  ADD KEY `id_avatar` (`id_avatar`),
+  ADD KEY `id_estado_usu` (`id_estado_usu`);
+
+--
+-- AUTO_INCREMENT de las tablas volcadas
+--
+
+--
+-- AUTO_INCREMENT de la tabla `armas`
+--
+ALTER TABLE `armas`
+  MODIFY `id_arma` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `avatar`
+--
+ALTER TABLE `avatar`
+  MODIFY `id_avatar` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT de la tabla `detalle_usuario_partida`
+--
+ALTER TABLE `detalle_usuario_partida`
+  MODIFY `id_usuario_partida` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `estado`
+--
+ALTER TABLE `estado`
+  MODIFY `id_estado` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT de la tabla `mundo`
+--
+ALTER TABLE `mundo`
+  MODIFY `id_mundo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT de la tabla `nivel`
+--
+ALTER TABLE `nivel`
+  MODIFY `id_nivel` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT de la tabla `partida`
+--
+ALTER TABLE `partida`
+  MODIFY `id_partida` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `rol`
+--
+ALTER TABLE `rol`
+  MODIFY `id_rol` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT de la tabla `sala`
+--
+ALTER TABLE `sala`
+  MODIFY `id_sala` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `tipo_arma`
+--
+ALTER TABLE `tipo_arma`
+  MODIFY `id_tipo_arma` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `usuario`
+--
+ALTER TABLE `usuario`
+  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- Restricciones para tablas volcadas
+--
+
+--
+-- Filtros para la tabla `armas`
+--
+ALTER TABLE `armas`
+  ADD CONSTRAINT `armas_ibfk_1` FOREIGN KEY (`id_nivel_arma`) REFERENCES `nivel` (`id_nivel`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `armas_ibfk_2` FOREIGN KEY (`id_tipo_arma`) REFERENCES `tipo_arma` (`id_tipo_arma`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `detalle_usuario_partida`
+--
+ALTER TABLE `detalle_usuario_partida`
+  ADD CONSTRAINT `detalle_usuario_partida_ibfk_2` FOREIGN KEY (`id_usuario1`) REFERENCES `usuario` (`id_usuario`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `detalle_usuario_partida_ibfk_3` FOREIGN KEY (`id_partida`) REFERENCES `partida` (`id_partida`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `detalle_usuario_partida_ibfk_4` FOREIGN KEY (`id_usuario2`) REFERENCES `usuario` (`id_usuario`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `detalle_usuario_partida_ibfk_5` FOREIGN KEY (`id_arma`) REFERENCES `armas` (`id_arma`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `partida`
+--
+ALTER TABLE `partida`
+  ADD CONSTRAINT `partida_ibfk_1` FOREIGN KEY (`id_sala`) REFERENCES `sala` (`id_sala`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `partida_ibfk_2` FOREIGN KEY (`id_estado_part`) REFERENCES `estado` (`id_estado`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `sala`
+--
+ALTER TABLE `sala`
+  ADD CONSTRAINT `sala_ibfk_1` FOREIGN KEY (`id_mundo`) REFERENCES `mundo` (`id_mundo`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `sala_ibfk_2` FOREIGN KEY (`id_nivel`) REFERENCES `nivel` (`id_nivel`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `sala_ibfk_3` FOREIGN KEY (`id_estado_sala`) REFERENCES `estado` (`id_estado`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `usuario`
+--
+ALTER TABLE `usuario`
+  ADD CONSTRAINT `usuario_ibfk_1` FOREIGN KEY (`id_rol`) REFERENCES `rol` (`id_rol`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `usuario_ibfk_2` FOREIGN KEY (`id_nivel`) REFERENCES `nivel` (`id_nivel`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `usuario_ibfk_3` FOREIGN KEY (`id_avatar`) REFERENCES `avatar` (`id_avatar`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `usuario_ibfk_4` FOREIGN KEY (`id_estado_usu`) REFERENCES `estado` (`id_estado`) ON DELETE CASCADE ON UPDATE CASCADE;
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

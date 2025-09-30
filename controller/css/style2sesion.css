@@ -28,7 +28,7 @@
       width:100%;
       max-width:420px;
       background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-  border:1.5px solid var(--accent);
+      border:1.5px solid var(--accent);
       border-radius:12px;
       padding:1.75rem;
       box-shadow: 0 6px 30px rgba(0,0,0,0.6);

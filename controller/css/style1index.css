@@ -1,0 +1,222 @@
+body {
+  background-color: #000;
+  color: #fff;
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.custom-navbar {
+  background: linear-gradient(90deg, #0f0f0f, #1c1c1c, #111);
+  padding: 0.8rem 1rem;
+  transition: all 0.3s ease-in-out;
+}
+
+.custom-navbar .navbar-brand {
+  font-size: 1.3rem;
+  color: #fff !important;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.logo-navbar {
+  width: 45px;
+  height: 45px;
+  margin-right: 10px;
+  border-radius: 50%;
+  border: 2px solid;
+}
+
+.custom-navbar .nav-link {
+  color: #bbb !important;
+  font-weight: 500;
+  transition: color 0.3s ease, transform 0.2s;
+}
+
+.custom-navbar .nav-link:hover {
+  color: #dc3545 !important;
+  transform: scale(1.05);
+}
+
+.juega-btn {
+  background-color: #dc3545;
+  border-radius: 25px;
+  transition: all 0.3s ease-in-out;
+  white-space: nowrap;
+  font-size: 1rem;
+  padding: 0.6rem 1.4rem;
+}
+
+.juega-btn:hover {
+  background-color: #b52a38;
+  transform: scale(1.08);
+}
+
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: white;
+  overflow: hidden;
+}
+
+.video-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: -1;
+}
+
+.video-bg iframe {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 177.77vh;
+  height: 100vh;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 0;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+  color: #fff;
+}
+
+.card {
+  background-color: #1a1a1a;
+  color: #fff;
+  border: 1px solid #333;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+}
+
+.card img {
+  object-fit: cover;
+  height: 200px;
+}
+
+.news-card {
+  background-color: #1a1a1a;
+}
+
+.card .btn-outline-primary {
+  color: #fff;
+  border-color: #fff;
+}
+
+.card .btn-outline-primary:hover {
+  background-color: #fff;
+  color: #000;
+}
+
+section {
+  padding: 60px 0;
+}
+
+section h2 {
+  font-weight: bold;
+  margin-bottom: 30px;
+}
+
+.footer {
+  background: #111;
+  color: #ccc;
+  padding: 50px 0 20px;
+}
+
+.footer h5 {
+  color: #fff;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.footer a {
+  color: #aaa;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.footer a:hover {
+  color: #fff;
+}
+
+.footer i {
+  transition: transform 0.3s, color 0.3s;
+}
+
+.footer i:hover {
+  color: #dc3545;
+  transform: scale(1.2);
+}
+
+.footer hr {
+  border-color: #333;
+}
+
+.footer .platforms span {
+  display: block;
+  margin-bottom: 8px;
+}
+
+a {
+  color: #fff !important;
+  text-decoration: none !important;
+  padding: 0%;
+  margin: 2%;
+}
+
+.footer a:hover {
+  color: #dc3545;
+  transform: scale(1.2);
+}
+
+a:hover,
+a:focus,
+a:visited {
+  color: #fff !important;
+  text-decoration: none !important;
+}
+
+.header-hidden {
+  transform: translateY(-100%);
+  transition: transform 0.3s ease;
+}
+
+@media (max-width: 768px) {
+  .hero {
+    min-height: 70vh;
+  }
+
+  .navbar-nav {
+    flex-direction: column !important;
+    align-items: start !important;
+  }
+
+  .juega-btn {
+    margin-top: 10px;
+    width: 100%;
+    text-align: center;
+  }
+
+  .card img {
+    height: 180px;
+  }
+}
