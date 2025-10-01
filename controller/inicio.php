@@ -38,7 +38,7 @@ if (isset($_POST["iniciar"])) {
             exit();
 
          case 2:
-            header("Location: ../model/gerente/player.php");
+            header("Location: ../model/player/player.php");
             exit();
 
          default:
