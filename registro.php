@@ -51,8 +51,9 @@ if (isset($_POST["validar"])) {
   <title>Registro de usuario</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
-   <link rel="stylesheet" href="controller/css/style2sesion.css">
-   <link rel="icon" type="image/png" href="img/logo4.jpg"/>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&display=swap" rel="stylesheet"> 
+  <link rel="stylesheet" href="controller/css/style2sesion.css">
+  <link rel="icon" type="image/png" href="img/logo4.jpg"/>
   
 </head>
 
