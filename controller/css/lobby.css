@@ -1,0 +1,109 @@
+/* Fondo de video */
+.video-fondo {
+    position: fixed; /* Fijo en toda la pantalla */
+    top: 50%;
+    left: 50%;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover; /* Llena la pantalla sin deformarse */
+    transform: translate(-50%, -50%);
+    z-index: -1; /* Detrás del contenido */
+    pointer-events: none; /* No bloquea clics */
+}
+
+/* Estilos generales del body */
+body {
+    background-color: #000;
+    color: #fff;
+    margin: 0;
+    padding: 0;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    overflow: hidden;
+}
+
+/* Contenedor principal */
+.contenedor {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Arriba */
+    align-items: center; /* Centrado horizontal */
+    height: 100vh;
+    padding-top: 0px;
+    color: white;
+    text-align: center;
+    position: relative; /* Para posicionar h1 */
+}
+
+/* Título en la esquina superior izquierda */
+h1 {
+    font-size: 3rem;
+    margin: 0;
+    text-transform: uppercase;
+    position: absolute;
+    top: 20px;
+    left: 30px;
+}
+
+/* Menú principal */
+.menu {
+    display: flex;
+    justify-content: center; /* Centra horizontalmente */
+    gap: 50px; /* Separación entre opciones */
+    margin-top: 35px; /* Distancia desde arriba */
+}
+
+.menu a {
+    font-size: 1.5rem;
+    color: rgb(255, 255, 255);
+    text-decoration: none;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.menu a:hover {
+    color: #750808;
+}
+
+/* Puntos y barra de progreso */
+.puntos {
+    margin-top: 40px;
+    text-align: right;
+    width: 80%;
+}
+
+progress {
+    width: 200px;
+    height: 20px;
+}
+/* Caja del usuario arriba derecha */
+.puntos {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  
+  padding: 8px 15px;
+  border-radius: 8px;
+}
+
+/* Nombre y nivel */
+.usuario-info {
+  text-align: right;
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+
+.imagen-lateral {
+  position: absolute;
+  left: 30px;       /* distancia desde el borde izquierdo */
+  bottom: 50px;     /* o usa top: 20px si la quieres arriba */
+  width: 400px;     /* tamaño grande */
+  height: auto;     /* mantiene proporción */
+  object-fit: contain;
+  z-index: 1;       /* asegura que quede visible encima del fondo */
+}
