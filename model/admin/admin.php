@@ -47,15 +47,13 @@ if (isset($_POST['cerrar'])) {
     </header>
 
     <div class="admin-title">
-        <h1>BIENVENIDO ADMINISTRADOR</h1>
+        <h1>BIENVENIDO AMINISTRADOR</h1>
     </div>
 
-    <div class="usuarios-bloque">
-        <div class="usuarios-contenido text-center">
-            <div class="usuarios-text mb-1">ADMINISTRAR USUARIOS</div>
-            <img src="../../controller/img/usuario.jpg" alt="Usuarios" class="usuarios-img">
-        </div>
-    </div>
+<div class="usuarios-bloque">
+    <div class="usuarios-text">ACTUALIZACIÓN DE JUGADORES</div>
+    <a href="usuarios.php"><img src="../../controller/img/usuario.jpg" alt="Usuarios" class="usuarios-img"></a>
+</div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
