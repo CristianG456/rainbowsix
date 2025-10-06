@@ -43,36 +43,34 @@ $resultado = $sql->fetchAll(PDO::FETCH_ASSOC);
         <h2 class="page-title-armamento">PARTIDAS JUGADAS</h2>
         
         <div class="table-container">
-            <!-- Fila de encabezado con las entidades -->
-            <div class="table-header">
-                <div class="table-cell">Nombre del Mundo</div>
-                <div class="table-cell">N° Sala</div>
-                <div class="table-cell">N° Partida</div>
-                <div class="table-cell">Fecha de Inicio</div>
-                <div class="table-cell">Fecha de Fin</div>
-                <div class="table-cell">Cantidad de Jugadores</div>
-                <div class="table-cell">Resultado</div>
-            </div>
+    <div class="table-header">
+        <div>Nombre del Mundo</div>
+        <div>N° Sala</div>
+        <div>N° Partida</div>
+        <div>Fecha de Inicio</div>
+        <div>Fecha de Fin</div>
+        <div>Cantidad de Jugadores</div>
+        <div>Resultado</div>
+    </div>
 
-            <!-- Filas de datos con las partidas -->
-            <?php
-            if (empty($resultado)) {
-                echo "<div class='table-row no-partidas'>No hay partidas jugadas.</div>";
-            } else {
-                foreach ($resultado as $fila_partida) {
-                    echo "<div class='table-row'>";
-                    echo "<div class='table-cell'>" . htmlspecialchars($fila_partida['nomb_mundo']) . "</div>";
-                    echo "<div class='table-cell'>" . htmlspecialchars($fila_partida['id_sala']) . "</div>";
-                    echo "<div class='table-cell'>" . htmlspecialchars($fila_partida['id_partida']) . "</div>";
-                    echo "<div class='table-cell'>" . htmlspecialchars($fila_partida['fecha_inicio']) . "</div>";
-                    echo "<div class='table-cell'>" . htmlspecialchars($fila_partida['fecha_fin']) . "</div>";
-                    echo "<div class='table-cell'>" . htmlspecialchars($fila_partida['cantidad_jug']) . "</div>";
-                    echo "<div class='table-cell'>Por determinar</div>"; // Aquí puedes agregar lógica para mostrar el resultado
-                    echo "</div>";
-                }
-            }
-            ?>
-        </div>
+    <?php
+    if (empty($resultado)) {
+        echo "<div class='table-row no-partidas'>No hay partidas jugadas.</div>";
+    } else {
+        foreach ($resultado as $fila_partida) {
+            echo "<div class='table-row'>";
+            echo "<div>" . htmlspecialchars($fila_partida['nomb_mundo']) . "</div>";
+            echo "<div>" . htmlspecialchars($fila_partida['id_sala']) . "</div>";
+            echo "<div>" . htmlspecialchars($fila_partida['id_partida']) . "</div>";
+            echo "<div>" . htmlspecialchars($fila_partida['fecha_inicio']) . "</div>";
+            echo "<div>" . htmlspecialchars($fila_partida['fecha_fin']) . "</div>";
+            echo "<div>" . htmlspecialchars($fila_partida['cantidad_jug']) . "</div>";
+            echo "<div>Por determinar</div>";
+            echo "</div>";
+        }
+    }
+    ?>
+</div>
     </div>
 </div>
 

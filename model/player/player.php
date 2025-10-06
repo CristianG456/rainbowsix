@@ -25,7 +25,7 @@
         <a href="#">Jugar</a>
         <a href="agentes/agentes.php">Agentes</a>
         <a href="armas/armas.php">Armas</a>
-        <a href="#">Partidas Jugadas</a>
+        <a href="partidas/partidas.php">Partidas Jugadas</a>
         </div>
 
     <div class="puntos">
