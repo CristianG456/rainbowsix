@@ -1,4 +1,14 @@
+<?php
+session_start();
+require_once("../../../database/db.php");
+$db = new Database();
+$con = $db->conectar();
 
+
+$sql = $con->prepare("SELECT * FROM armas");
+$sql->execute();
+$resultado = $sql->fetchAll(PDO::FETCH_ASSOC);
+?>
 
 
 
