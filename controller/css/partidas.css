@@ -1,0 +1,131 @@
+/* Estilo general del fondo */
+body {
+    background-image: url('../../controller/img/partidas.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    margin: 0;
+    padding: 0;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    color: #f4f4f4; /* Texto claro sobre fondo oscuro */
+}
+
+/* Contenedor principal */
+.contenedor {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    min-height: 100vh;
+    padding-top: 100px;
+    color: white;
+    text-align: center;
+    position: relative;
+    background: rgba(0, 0, 0, 0.5); /* Fondo oscuro semitransparente */
+    border-radius: 15px;
+    width: 100%;
+}
+
+/* Título de la sección (centrado) */
+.contenedor > h2 {
+    font-size: 4rem;
+    margin: 0;
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #fff;
+    z-index: 2;
+}
+
+@media (max-width: 800px) {
+    .contenedor > h2 {
+        font-size: 2.2rem;
+    }
+}
+
+/* Contenedor de la tabla de partidas */
+.table-container {
+    width: 90%;
+    max-width: 1200px;
+    margin-top: 50px;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr); /* 7 columnas iguales */
+    gap: 15px; /* Espaciado entre celdas */
+    background-color: rgba(0, 0, 0, 0.6); /* Fondo oscuro semitransparente */
+    padding: 20px;
+    border-radius: 15px;
+}
+
+/* Fila de encabezado (entidades) */
+.table-header {
+    font-weight: bold;
+    background-color: #750808; /* Color rojo para encabezado */
+    color: white;
+    text-align: center;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    grid-column: span 7; /* Las etiquetas de columna ocupan toda la fila */
+}
+
+/* Celdas (filas de datos) */
+.table-cell {
+    background-color: rgba(0, 0, 0, 0.8); /* Fondo oscuro para cada celda */
+    color: white;
+    text-align: center;
+    padding: 15px;
+    border-radius: 10px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Efecto de hover sobre las celdas */
+.table-cell:hover {
+    background-color: rgba(50, 50, 50, 0.7);
+    transform: scale(1.05); /* Efecto de aumento al pasar el ratón */
+}
+
+/* Fila vacía de mensaje si no hay partidas */
+.table-row.no-partidas {
+    grid-column: span 7; /* Esto hará que ocupe todas las columnas */
+    text-align: center;
+    font-size: 1.2rem;
+    color: #f4f4f4;
+    background-color: #333;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+/* Estilo del botón 'Volver' */
+.btn-volver {
+    color: #fff;
+    text-decoration: none;
+    font-weight: 900;
+    font-size: 1.1rem;
+    padding: 10px 15px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    transition: color 0.15s ease, transform 0.08s ease;
+    position: absolute;
+    top: 18px;
+    left: 30px;
+    z-index: 4;
+    border-radius: 5px;
+}
+
+.btn-volver:hover {
+    color: #d30000; /* Rojo al pasar el ratón */
+    transform: translateY(-2px);
+}
+
+@media (max-width: 600px) {
+    .btn-volver {
+        font-size: 1rem;
+        top: 26px;
+        left: 16px;
+    }
+}
