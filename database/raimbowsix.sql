@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 06-10-2025 a las 19:39:56
+-- Tiempo de generación: 06-10-2025 a las 21:17:12
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -43,12 +43,12 @@ CREATE TABLE `armas` (
 --
 
 INSERT INTO `armas` (`id_arma`, `nomb_arma`, `daño_cabeza`, `daño_torso`, `id_tipo_arma`, `cant_balas`, `img_arma`, `id_nivel_arma`) VALUES
-(1, 'Puño', 5, 2, 1, NULL, '\"C:\\xampp\\htdocs\\rainbowsix\\controller\\img\\puño.jpg\"', 1),
-(2, 'Cuchillo', 25, 15, 1, NULL, '\"C:\\xampp\\htdocs\\rainbowsix\\controller\\img\\cuchillo.png\"', 2),
+(1, 'Puño', 10, 5, 1, NULL, '\"C:\\xampp\\htdocs\\rainbowsix\\controller\\img\\puño.jpg\"', 1),
+(2, 'Cuchillo', 10, 5, 1, NULL, '\"C:\\xampp\\htdocs\\rainbowsix\\controller\\img\\cuchillo.png\"', 1),
 (3, 'Pistola', 20, 10, 1, 15, '\"C:\\xampp\\htdocs\\rainbowsix\\controller\\img\\pistola.png\"', 2),
-(4, 'Subfusil', 15, 8, 2, 30, '\"C:\\xampp\\htdocs\\rainbowsix\\controller\\img\\SUBFUSIL.png\"', 2),
-(5, 'Fusil de asalto', 25, 12, 3, 30, '\"C:\\xampp\\htdocs\\rainbowsix\\controller\\img\\fusilasalto.png\"', 3),
-(6, 'Escopeta', 30, 20, 2, 8, '\"C:\\xampp\\htdocs\\rainbowsix\\controller\\img\\escopeta.png\"', 3),
+(4, 'Subfusil', 20, 10, 2, 30, '\"C:\\xampp\\htdocs\\rainbowsix\\controller\\img\\SUBFUSIL.png\"', 2),
+(5, 'Fusil de asalto', 25, 15, 3, 30, '\"C:\\xampp\\htdocs\\rainbowsix\\controller\\img\\fusilasalto.png\"', 3),
+(6, 'Escopeta', 25, 15, 2, 8, '\"C:\\xampp\\htdocs\\rainbowsix\\controller\\img\\escopeta.png\"', 3),
 (7, 'Franco', 40, 25, 3, 5, '\"C:\\xampp\\htdocs\\rainbowsix\\controller\\img\\franco.png\"', 4);
 
 -- --------------------------------------------------------
@@ -60,18 +60,19 @@ INSERT INTO `armas` (`id_arma`, `nomb_arma`, `daño_cabeza`, `daño_torso`, `id_
 CREATE TABLE `avatar` (
   `id_avatar` int(11) NOT NULL,
   `nomb_avat` text NOT NULL,
-  `url` varchar(500) NOT NULL
+  `url_personaje` varchar(500) NOT NULL,
+  `url_avatar` varchar(500) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `avatar`
 --
 
-INSERT INTO `avatar` (`id_avatar`, `nomb_avat`, `url`) VALUES
-(1, 'Skopós', 'https://static.wikia.nocookie.net/rainbowsix/images/4/4c/R6Skopos_render.png/revision/latest?cb=20250625090832'),
-(2, 'Deimos', 'https://static.wikia.nocookie.net/rainbowsix/images/5/55/R6S_Deimos_Full_Render.png/revision/latest?cb=20240303164226'),
-(3, 'Nokk', 'https://static.wikia.nocookie.net/rainbowsix/images/8/81/N%C3%B8kk_-_Full_Body.png/revision/latest?cb=20190612000127'),
-(4, 'Ace', 'https://static.wikia.nocookie.net/rainbowsix/images/a/a6/Ace_-_Full_Body.png/revision/latest?cb=20200519185439');
+INSERT INTO `avatar` (`id_avatar`, `nomb_avat`, `url_personaje`, `url_avatar`) VALUES
+(1, 'Skopos', '\"C:\\xampp\\htdocs\\rainbowsix\\controller\\img\\skopospj.webp\"', '\"C:\\xampp\\htdocs\\rainbowsix\\controller\\img\\skoposavat.webp\"'),
+(2, 'Deimos', '\"C:\\xampp\\htdocs\\rainbowsix\\controller\\img\\deimospj.webp\"', '\"C:\\xampp\\htdocs\\rainbowsix\\controller\\img\\deimosavat.webp\"'),
+(3, 'Nokk', '\"C:\\xampp\\htdocs\\rainbowsix\\controller\\img\\nokkpj.webp\"', '\"C:\\xampp\\htdocs\\rainbowsix\\controller\\img\\nokkavat.webp\"'),
+(4, 'Ace', '\"C:\\xampp\\htdocs\\rainbowsix\\controller\\img\\acepj.webp\"', '\"C:\\xampp\\htdocs\\rainbowsix\\controller\\img\\aceavat.webp\"');
 
 -- --------------------------------------------------------
 
@@ -138,18 +139,19 @@ INSERT INTO `mundo` (`id_mundo`, `nomb_mundo`) VALUES
 CREATE TABLE `nivel` (
   `id_nivel` int(11) NOT NULL,
   `nomb_nivel` varchar(500) NOT NULL,
-  `puntos_nivel` int(11) NOT NULL
+  `puntos_nivel` int(11) NOT NULL,
+  `url` varchar(500) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `nivel`
 --
 
-INSERT INTO `nivel` (`id_nivel`, `nomb_nivel`, `puntos_nivel`) VALUES
-(1, 'Bronce', 0),
-(2, 'Plata', 250),
-(3, 'Oro', 500),
-(4, 'Diamante', 750);
+INSERT INTO `nivel` (`id_nivel`, `nomb_nivel`, `puntos_nivel`, `url`) VALUES
+(1, 'Bronce', 0, '\"C:\\xampp\\htdocs\\rainbowsix\\controller\\img\\bronce.png\"'),
+(2, 'Plata', 250, '\"C:\\xampp\\htdocs\\rainbowsix\\controller\\img\\plata.png\"'),
+(3, 'Oro', 500, '\"C:\\xampp\\htdocs\\rainbowsix\\controller\\img\\oro.png\"'),
+(4, 'Diamante', 750, '\"C:\\xampp\\htdocs\\rainbowsix\\controller\\img\\diamante.png\"');
 
 -- --------------------------------------------------------
 
@@ -195,7 +197,7 @@ CREATE TABLE `sala` (
   `id_sala` int(11) NOT NULL,
   `num_sala` int(11) NOT NULL,
   `fecha_creacion` datetime NOT NULL,
-  `img_sala` varchar(500) NOT NULL,
+  `url_sala` varchar(500) NOT NULL,
   `id_estado_sala` int(11) NOT NULL,
   `id_mundo` int(11) NOT NULL,
   `id_nivel` int(11) NOT NULL

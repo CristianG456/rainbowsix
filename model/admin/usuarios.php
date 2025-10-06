@@ -62,13 +62,15 @@ if (isset($_POST['buscar'])) {
         INNER JOIN nivel n ON u.id_nivel = n.id_nivel
         INNER JOIN estado e ON u.id_estado_usu = e.id_estado
         WHERE u.nomb_usu LIKE :b1 OR u.correo LIKE :b2 OR r.nom_rol LIKE :b3 OR e.estado LIKE :b4
+        AND u.id_rol = :id_rol
     ");
     $searchTerm = "%$busqueda%";
     $stmt->execute([
         ':b1' => $searchTerm,
         ':b2' => $searchTerm,
         ':b3' => $searchTerm,
-        ':b4' => $searchTerm
+        ':b4' => $searchTerm,
+        ':id_rol' => 2
     ]);
     $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
