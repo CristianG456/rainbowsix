@@ -24,7 +24,8 @@
         <div class="menu">
         <a href="#">Jugar</a>
         <a href="agentes/agentes.php">Agentes</a>
-        <a href="#">Armas</a>
+        <a href="armas/armas.php">Armas</a>
+        <a href="#">Partidas Jugadas</a>
         </div>
 
     <div class="puntos">
