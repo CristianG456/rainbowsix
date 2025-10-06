@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 30-09-2025 a las 07:12:35
+-- Tiempo de generación: 06-10-2025 a las 19:39:56
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -37,6 +37,19 @@ CREATE TABLE `armas` (
   `img_arma` varchar(500) NOT NULL,
   `id_nivel_arma` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `armas`
+--
+
+INSERT INTO `armas` (`id_arma`, `nomb_arma`, `daño_cabeza`, `daño_torso`, `id_tipo_arma`, `cant_balas`, `img_arma`, `id_nivel_arma`) VALUES
+(1, 'Puño', 5, 2, 1, NULL, '\"C:\\xampp\\htdocs\\rainbowsix\\controller\\img\\puño.jpg\"', 1),
+(2, 'Cuchillo', 25, 15, 1, NULL, '\"C:\\xampp\\htdocs\\rainbowsix\\controller\\img\\cuchillo.png\"', 2),
+(3, 'Pistola', 20, 10, 1, 15, '\"C:\\xampp\\htdocs\\rainbowsix\\controller\\img\\pistola.png\"', 2),
+(4, 'Subfusil', 15, 8, 2, 30, '\"C:\\xampp\\htdocs\\rainbowsix\\controller\\img\\SUBFUSIL.png\"', 2),
+(5, 'Fusil de asalto', 25, 12, 3, 30, '\"C:\\xampp\\htdocs\\rainbowsix\\controller\\img\\fusilasalto.png\"', 3),
+(6, 'Escopeta', 30, 20, 2, 8, '\"C:\\xampp\\htdocs\\rainbowsix\\controller\\img\\escopeta.png\"', 3),
+(7, 'Franco', 40, 25, 3, 5, '\"C:\\xampp\\htdocs\\rainbowsix\\controller\\img\\franco.png\"', 4);
 
 -- --------------------------------------------------------
 
@@ -196,8 +209,17 @@ CREATE TABLE `sala` (
 
 CREATE TABLE `tipo_arma` (
   `id_tipo_arma` int(11) NOT NULL,
-  `tipo_arma` int(11) NOT NULL
+  `tipo_arma` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `tipo_arma`
+--
+
+INSERT INTO `tipo_arma` (`id_tipo_arma`, `tipo_arma`) VALUES
+(1, 'Corto Alcance'),
+(2, 'Mediano Alcance'),
+(3, 'Largo Alcance');
 
 -- --------------------------------------------------------
 
@@ -223,10 +245,11 @@ CREATE TABLE `usuario` (
 --
 
 INSERT INTO `usuario` (`id_usuario`, `nomb_usu`, `contra_usu`, `correo`, `vida`, `ultimo_ingreso`, `id_avatar`, `id_rol`, `id_nivel`, `id_estado_usu`) VALUES
-(3, 'kevin1', '$2y$05$fSw5EsGzaKGmxvFW0U1v4.IoyUmxgLQ2BJhaPtBN69LAPzwMhS0y6', 'prueba1@gmail.com', 200, '2025-09-29 23:42:11', NULL, 2, 1, 2),
+(3, 'kevin1', '$2y$05$fSw5EsGzaKGmxvFW0U1v4.IoyUmxgLQ2BJhaPtBN69LAPzwMhS0y6', 'prueba1@gmail.com', 200, '2025-09-29 23:42:11', NULL, 2, 1, 1),
 (4, 'kevin2', '$2y$05$CAogpD6U6PNmLJ5UyFQBAe7psQ2G04NRw3A2jnHFe4Q7XalCLy/1u', 'prueba@gmail.com', 200, '2025-09-29 23:49:00', NULL, 2, 1, 2),
 (5, 'admin1', '$2y$05$tev8R65QSkIbN/Q9mCrqGua9U5ETvGkwm8SYYJLl4ivbCniMjf22G', 'admin1@gmail.com', 200, '2025-09-30 00:10:35', NULL, 1, 1, 2),
-(6, 'admin2', '$2y$05$S7rJ1au/Ixbit.d5j/.fq.MPv63ln6fU7hlym56wWGr3F3U4eeKkm', 'admin2@gmail.com', 200, '2025-09-30 00:10:46', NULL, 1, 1, 2);
+(6, 'admin2', '$2y$05$S7rJ1au/Ixbit.d5j/.fq.MPv63ln6fU7hlym56wWGr3F3U4eeKkm', 'admin2@gmail.com', 200, '2025-09-30 00:10:46', NULL, 1, 1, 2),
+(7, 'Cronos', '$2y$05$AoCXnC9gW2p3ZnMxZ0p.ku5HAqEaaDQIx/BAai8aScYgs7qIkUbtm', 'cristiancronos123@gmail.com', 200, '2025-09-30 16:55:35', NULL, 2, 1, 2);
 
 --
 -- Índices para tablas volcadas
@@ -321,7 +344,7 @@ ALTER TABLE `usuario`
 -- AUTO_INCREMENT de la tabla `armas`
 --
 ALTER TABLE `armas`
-  MODIFY `id_arma` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_arma` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de la tabla `avatar`
@@ -375,13 +398,13 @@ ALTER TABLE `sala`
 -- AUTO_INCREMENT de la tabla `tipo_arma`
 --
 ALTER TABLE `tipo_arma`
-  MODIFY `id_tipo_arma` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_tipo_arma` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- Restricciones para tablas volcadas
