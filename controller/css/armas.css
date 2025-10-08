@@ -240,7 +240,7 @@ progress {
             text-transform: uppercase;
             letter-spacing: 2px;
             z-index: 3;
-            color: #fff;
+            color: #ffd700;
             white-space: nowrap;
         }
         @media (max-width: 800px) {

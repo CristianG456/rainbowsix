@@ -4,6 +4,10 @@ require_once("../../../database/db.php");
 $db = new Database();
 $con = $db->conectar();
 
+$usu = $_SESSION['id_usuario'];
+$sql = $con->prepare("SELECT * FROM usuario INNER JOIN rol ON usuario.id_rol= rol.id_rol WHERE usuario.id_usuario =$usu");
+$sql->execute();
+$fila = $sql->fetch();
 
 
 $sql = $con->prepare("SELECT * FROM armas where armas.id_arma order by armas.id_arma ASC");

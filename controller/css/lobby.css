@@ -1,17 +1,15 @@
-/* Fondo de video */
 .video-fondo {
-    position: fixed; /* Fijo en toda la pantalla */
+    position: fixed;
     top: 50%;
     left: 50%;
     width: 100vw;
     height: 100vh;
-    object-fit: cover; /* Llena la pantalla sin deformarse */
+    object-fit: cover;
     transform: translate(-50%, -50%);
-    z-index: -1; /* Detrás del contenido */
-    pointer-events: none; /* No bloquea clics */
+    z-index: -1;
+    pointer-events: none;
 }
 
-/* Estilos generales del body */
 body {
     background-color: #000;
     color: #fff;
@@ -22,20 +20,18 @@ body {
     overflow: hidden;
 }
 
-/* Contenedor principal */
 .contenedor {
     display: flex;
     flex-direction: column;
-    justify-content: flex-start; /* Arriba */
-    align-items: center; /* Centrado horizontal */
+    justify-content: flex-start;
+    align-items: center;
     height: 100vh;
-    padding-top: 0px;
+    padding-top: 0;
     color: white;
     text-align: center;
-    position: relative; /* Para posicionar h1 */
+    position: relative;
 }
 
-/* Título en la esquina superior izquierda */
 h1 {
     font-size: 3rem;
     margin: 0;
@@ -45,27 +41,26 @@ h1 {
     left: 30px;
 }
 
-/* Menú principal */
 .menu {
     display: flex;
-    justify-content: center; /* Centra horizontalmente */
-    gap: 50px; /* Separación entre opciones */
-    margin-top: 35px; /* Distancia desde arriba */
+    justify-content: center;
+    gap: 25px;
+    margin-left: 70px;
+    margin-top: 35px;
 }
 
 .menu a {
     font-size: 1.5rem;
-    color: rgb(255, 255, 255);
+    color: #fff;
     text-decoration: none;
     font-weight: bold;
-    transition: 0.3s;
+    transition: .3s;
 }
 
 .menu a:hover {
     color: #750808;
 }
 
-/* Puntos y barra de progreso */
 .puntos {
     margin-top: 40px;
     text-align: right;
@@ -76,7 +71,7 @@ progress {
     width: 200px;
     height: 20px;
 }
-/* Caja del usuario arriba derecha */
+
 .puntos {
   position: absolute;
   top: 20px;
@@ -84,12 +79,10 @@ progress {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  
   padding: 8px 15px;
   border-radius: 8px;
 }
 
-/* Nombre y nivel */
 .usuario-info {
   text-align: right;
   font-size: 14px;
@@ -97,38 +90,34 @@ progress {
   margin-bottom: 8px;
 }
 
-
 .imagen-lateral {
   position: absolute;
-  left: 30px;       /* distancia desde el borde izquierdo */
-  bottom: 50px;     /* o usa top: 20px si la quieres arriba */
-  width: 400px;     /* tamaño grande */
-  height: auto;     /* mantiene proporción */
+  left: 30px;
+  bottom: 50px;
+  width: 400px;
+  height: auto;
   object-fit: contain;
-  z-index: 1;       /* asegura que quede visible encima del fondo */
+  z-index: 1;
 }
 
-/* --- Fondo oscuro semitransparente alrededor de las armas --- */
 .armas-wrapper {
-    background: rgba(0, 0, 0, 0.6); /* negro con 60% opacidad */
+    background: rgba(0,0,0,0.6);
     padding: 20px 30px;
     border-radius: 12px;
     display: flex;
-    justify-content: center; /* centra el contenido interior */
-    margin: 20px auto; /* separacion arriba/abajo y centrado horizontal */
-    max-width: 1100px; /* opcional: limita el ancho del fondo para que no ocupe toda la pantalla */
+    justify-content: center;
+    margin: 20px auto;
+    max-width: 1100px;
     box-sizing: border-box;
 }
-
 
 .armas-container {
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 40px;
-    flex-wrap: wrap; 
+    flex-wrap: wrap;
 }
-
 
 .arma {
     display: flex;
@@ -136,10 +125,9 @@ progress {
     align-items: center;
     text-align: center;
     min-width: 80px;
-    max-width: 180px; 
+    max-width: 180px;
 }
 
-/* Ajustes para las imágenes de las armas */
 .arma img {
     width: 120px;
     height: auto;
@@ -148,28 +136,84 @@ progress {
     display: block;
 }
 
-/* Texto debajo de la imagen */
 .arma p {
-    font-size: 0.95rem;
+    font-size: .95rem;
     font-weight: 900;
     margin: 0;
 }
 
+.cerrar-sesion-btn {
+    background-color: #dc3545;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color .3s ease, transform .1s ease;
+}
 
-@media (max-width: 600px) {
-    .armas-wrapper {
-        padding: 12px;
-        gap: 12px;
-    }
+.cerrar-sesion-btn:hover {
+    background-color: #c82333;
+}
 
-    .arma img {
-        width: 90px;
-    }
+.cerrar-sesion-btn:active {
+    transform: scale(.98);
+}
 
-    .arma p {
-        font-size: 0.9rem;
-    }
+.juego-container {
+    position: relative;
+    width: 100%;
+    max-width: 1200px;
+    height: 520px;
+    margin: 0 auto;
+    overflow: visible;
+    pointer-events: none;
+}
+
+.mifig-container {
+    position: absolute;
+    left: 18px;
+    bottom: 100px;
+    width: 220px;          /* ancho fijo para todos */
+    height: 420px;         /* altura fija estándar */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    z-index: 3;
+    pointer-events: auto;
+}
+
+.personaje {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;    /* mantiene proporciones */
+    object-position: bottom; /* ancla los pies abajo */
+    image-rendering: auto;
+filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.6));
+    animation: idleFloat 3s ease-in-out infinite;
+    user-select: none;
 }
 
 
+@keyframes idleFloat {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+}
 
+@media (max-width: 900px) {
+    .juego-container { height: 420px; }
+    .mifig-container { left: 12px; bottom: 28px; width: 180px; }
+    .personaje { width: 120px; }
+    .plataforma { width: 160px; height: 10px; }
+}
+
+@media (max-width: 600px) {
+    .menu { margin-left: 20px; gap: 12px; }
+    h1 { font-size: 2rem; left: 16px; top: 12px; }
+    .mifig-container { left: 8px; bottom: 20px; width: 140px; }
+    .personaje { width: 100px; }
+    .plataforma { width: 120px; height: 8px; }
+}

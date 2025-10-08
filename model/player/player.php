@@ -1,3 +1,21 @@
+<?php
+session_start();
+require_once("../../database/db.php");
+$db = new Database();
+$con = $db->conectar();
+
+$usu = $_SESSION['id_usuario'];
+$sql = $con->prepare("SELECT * FROM usuario INNER JOIN rol ON usuario.id_rol= rol.id_rol WHERE usuario.id_usuario =$usu");
+$sql->execute();
+$fila = $sql->fetch();
+
+if (isset($_POST['cerrar'])) {
+    session_destroy();
+    header('location:../../index.html');
+}
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,7 +40,7 @@
         <h1>Rainbow Six</h1>
 
         <div class="menu">
-        <a href="#">Jugar</a>
+        <a href="juego/juego.php">Jugar</a>
         <a href="agentes/agentes.php">Agentes</a>
         <a href="armas/armas.php">Armas</a>
         <a href="partidas/partidas.php">Partidas Jugadas</a>
@@ -34,18 +52,22 @@
             <span>Nivel: 25</span>
         </div>
 
-        <div class="usuario-progress">
-            <label>
-            Puntos:
-            <progress id="puntosnivel" max="100" value="70">70%</progress>
-            </label>
-        </div>
-    </div>
+<div class="usuario-progress">
+    <label>
+        Puntos:
+        <progress id="puntosnivel" max="100" value="70">70%</progress>
+    </label>
 
-    <div class="header-left">
-        <img src="../../controller/img/glazz.png"  alt="" class="imagen-lateral">
-       
-    </div>
+    <form method="POST">
+        <input type="submit" value="Cerrar Sesión" name="cerrar" class="cerrar-sesion-btn">
+    </form>
+</div>
+
+<div class="juego-container">
+  <div class="mifig-container">
+    <img src="../../controller/img/nokkpj.webp" alt="Personaje" class="personaje">
+  </div>
+</div>
 
 
 
