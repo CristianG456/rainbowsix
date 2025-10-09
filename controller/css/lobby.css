@@ -73,35 +73,35 @@ progress {
 }
 
 .puntos {
-  position: absolute;
-  top: 20px;
-  right: 30px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  padding: 8px 15px;
-  border-radius: 8px;
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    padding: 8px 15px;
+    border-radius: 8px;
 }
 
 .usuario-info {
-  text-align: right;
-  font-size: 14px;
-  font-weight: bold;
-  margin-bottom: 8px;
+    text-align: right;
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 8px;
 }
 
 .imagen-lateral {
-  position: absolute;
-  left: 30px;
-  bottom: 50px;
-  width: 400px;
-  height: auto;
-  object-fit: contain;
-  z-index: 1;
+    position: absolute;
+    left: 30px;
+    bottom: 50px;
+    width: 400px;
+    height: auto;
+    object-fit: contain;
+    z-index: 1;
 }
 
 .armas-wrapper {
-    background: rgba(0,0,0,0.6);
+    background: rgba(0, 0, 0, 0.6);
     padding: 20px 30px;
     border-radius: 12px;
     display: flex;
@@ -176,8 +176,10 @@ progress {
     position: absolute;
     left: 18px;
     bottom: 100px;
-    width: 220px;          /* ancho fijo para todos */
-    height: 420px;         /* altura fija estándar */
+    width: 220px;
+    /* ancho fijo para todos */
+    height: 420px;
+    /* altura fija estándar */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -189,31 +191,118 @@ progress {
 .personaje {
     width: 100%;
     height: 100%;
-    object-fit: contain;    /* mantiene proporciones */
-    object-position: bottom; /* ancla los pies abajo */
+    object-fit: contain;
+    object-position: bottom;
     image-rendering: auto;
-filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.6));
+    filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.6));
     animation: idleFloat 3s ease-in-out infinite;
     user-select: none;
 }
 
+.personaje1 {
+    width: 370px;
+    height: 370px;
+    object-fit: contain;
+    object-position: bottom;
+    image-rendering: auto;
+    filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.6));
+    animation: idleFloat 3s ease-in-out infinite;
+    user-select: none;
+}
+
+a {
+    text-decoration: none;
+    color: rgb(255, 255, 255);
+    font-weight: bold;
+    font-size: 18px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 20px;
+    background: #333;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, gold, orange);
+    border-radius: 10px;
+    transition: width 1s ease-in-out;
+}
+
+.icono-rango {
+    width: 40px;
+    height: 40px;
+    vertical-align: middle;
+    margin-left: 10px;
+}
+
+
+
 
 @keyframes idleFloat {
-    0%,100% { transform: translateY(0); }
-    50% { transform: translateY(-4px); }
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-4px);
+    }
 }
 
 @media (max-width: 900px) {
-    .juego-container { height: 420px; }
-    .mifig-container { left: 12px; bottom: 28px; width: 180px; }
-    .personaje { width: 120px; }
-    .plataforma { width: 160px; height: 10px; }
+    .juego-container {
+        height: 420px;
+    }
+
+    .mifig-container {
+        left: 12px;
+        bottom: 28px;
+        width: 180px;
+    }
+
+    .personaje {
+        width: 120px;
+    }
+
+    .plataforma {
+        width: 160px;
+        height: 10px;
+    }
 }
 
 @media (max-width: 600px) {
-    .menu { margin-left: 20px; gap: 12px; }
-    h1 { font-size: 2rem; left: 16px; top: 12px; }
-    .mifig-container { left: 8px; bottom: 20px; width: 140px; }
-    .personaje { width: 100px; }
-    .plataforma { width: 120px; height: 8px; }
+    .menu {
+        margin-left: 20px;
+        gap: 12px;
+    }
+
+    h1 {
+        font-size: 2rem;
+        left: 16px;
+        top: 12px;
+    }
+
+    .mifig-container {
+        left: 8px;
+        bottom: 20px;
+        width: 140px;
+    }
+
+    .personaje {
+        width: 100px;
+    }
+
+    .plataforma {
+        width: 120px;
+        height: 8px;
+    }
 }
