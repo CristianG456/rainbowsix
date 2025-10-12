@@ -43,14 +43,14 @@ $fila = $sql->fetch();
             <div class="mundo">
                
                 <h2>Ciudad (Normal)</h2>
-                <a href="desierto/desierto.php">
-                    <img src="../../../controller/img/desierto.webp" alt="desierto" class="imagen-mundo">
+                <a href="normal/normal.php">
+                    <img src="../../../controller/img/ciudad.jpg" alt="desierto" class="imagen-mundo">
                 </a>
             </div>
 
             <div class="mundo">
                 <h2>Ciudad (Clasificatoria)</h2>
-                <a href="ciudad/ciudad.php">            
+                <a href="clasificatoria/clasificatoria.php">            
                     <img src="../../../controller/img/ciudad.jpg" alt="ciudad" class="imagen-mundo">
                 </a>
             </div>

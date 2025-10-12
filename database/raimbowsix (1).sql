@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 07-10-2025 a las 00:13:23
+-- Tiempo de generación: 10-10-2025 a las 18:55:33
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -143,18 +143,18 @@ CREATE TABLE `nivel` (
   `id_nivel` int(11) NOT NULL,
   `nomb_nivel` varchar(500) NOT NULL,
   `puntos_nivel` int(11) NOT NULL,
-  `url` varchar(500) NOT NULL
+  `url_nivel` varchar(500) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `nivel`
 --
 
-INSERT INTO `nivel` (`id_nivel`, `nomb_nivel`, `puntos_nivel`, `url`) VALUES
-(1, 'Bronce', 0, '\"C:\\xampp\\htdocs\\rainbowsix\\controller\\img\\bronce.png\"'),
-(2, 'Plata', 250, '\"C:\\xampp\\htdocs\\rainbowsix\\controller\\img\\plata.png\"'),
-(3, 'Oro', 500, '\"C:\\xampp\\htdocs\\rainbowsix\\controller\\img\\oro.png\"'),
-(4, 'Diamante', 750, '\"C:\\xampp\\htdocs\\rainbowsix\\controller\\img\\diamante.png\"');
+INSERT INTO `nivel` (`id_nivel`, `nomb_nivel`, `puntos_nivel`, `url_nivel`) VALUES
+(1, 'Bronce', 0, 'broncee.png'),
+(2, 'Plata', 250, 'plataa.png'),
+(3, 'Oro', 500, 'oroo.png'),
+(4, 'Diamante', 750, 'diamantee.png');
 
 -- --------------------------------------------------------
 
@@ -251,6 +251,7 @@ CREATE TABLE `usuario` (
   `contra_usu` varchar(500) NOT NULL,
   `correo` varchar(250) NOT NULL,
   `vida` int(11) NOT NULL,
+  `puntos` int(11) DEFAULT NULL,
   `ultimo_ingreso` datetime NOT NULL,
   `id_avatar` int(11) DEFAULT NULL,
   `id_rol` int(11) NOT NULL,
@@ -262,12 +263,13 @@ CREATE TABLE `usuario` (
 -- Volcado de datos para la tabla `usuario`
 --
 
-INSERT INTO `usuario` (`id_usuario`, `nomb_usu`, `contra_usu`, `correo`, `vida`, `ultimo_ingreso`, `id_avatar`, `id_rol`, `id_nivel`, `id_estado_usu`) VALUES
-(3, 'kevin1', '$2y$05$fSw5EsGzaKGmxvFW0U1v4.IoyUmxgLQ2BJhaPtBN69LAPzwMhS0y6', 'prueba1@gmail.com', 200, '2025-09-29 23:42:11', NULL, 2, 1, 1),
-(4, 'kevin2', '$2y$05$CAogpD6U6PNmLJ5UyFQBAe7psQ2G04NRw3A2jnHFe4Q7XalCLy/1u', 'prueba@gmail.com', 200, '2025-09-29 23:49:00', NULL, 2, 1, 2),
-(5, 'admin1', '$2y$05$tev8R65QSkIbN/Q9mCrqGua9U5ETvGkwm8SYYJLl4ivbCniMjf22G', 'admin1@gmail.com', 200, '2025-09-30 00:10:35', NULL, 1, 1, 2),
-(6, 'admin2', '$2y$05$S7rJ1au/Ixbit.d5j/.fq.MPv63ln6fU7hlym56wWGr3F3U4eeKkm', 'admin2@gmail.com', 200, '2025-09-30 00:10:46', NULL, 1, 1, 2),
-(7, 'Cronos', '$2y$05$AoCXnC9gW2p3ZnMxZ0p.ku5HAqEaaDQIx/BAai8aScYgs7qIkUbtm', 'cristiancronos123@gmail.com', 200, '2025-09-30 16:55:35', NULL, 2, 1, 2);
+INSERT INTO `usuario` (`id_usuario`, `nomb_usu`, `contra_usu`, `correo`, `vida`, `puntos`, `ultimo_ingreso`, `id_avatar`, `id_rol`, `id_nivel`, `id_estado_usu`) VALUES
+(3, 'kevin1', '$2y$05$fSw5EsGzaKGmxvFW0U1v4.IoyUmxgLQ2BJhaPtBN69LAPzwMhS0y6', 'prueba1@gmail.com', 200, NULL, '2025-09-29 23:42:11', 3, 2, 1, 1),
+(4, 'kevin2', '$2y$05$CAogpD6U6PNmLJ5UyFQBAe7psQ2G04NRw3A2jnHFe4Q7XalCLy/1u', 'prueba@gmail.com', 200, NULL, '2025-09-29 23:49:00', 4, 2, 1, 2),
+(5, 'admin1', '$2y$05$tev8R65QSkIbN/Q9mCrqGua9U5ETvGkwm8SYYJLl4ivbCniMjf22G', 'admin1@gmail.com', 200, NULL, '2025-09-30 00:10:35', NULL, 1, 1, 2),
+(6, 'admin2', '$2y$05$S7rJ1au/Ixbit.d5j/.fq.MPv63ln6fU7hlym56wWGr3F3U4eeKkm', 'admin2@gmail.com', 200, NULL, '2025-09-30 00:10:46', NULL, 1, 1, 2),
+(7, 'Cronos', '$2y$05$AoCXnC9gW2p3ZnMxZ0p.ku5HAqEaaDQIx/BAai8aScYgs7qIkUbtm', 'cristiancronos123@gmail.com', 200, NULL, '2025-09-30 16:55:35', NULL, 2, 1, 2),
+(8, 'kevin3', '$2y$05$rG8RY0XSWd3m1QC.EkyH7O.KlOMY0RTYw7/eJ2G2J6UR5Wp1HCu7u', 'prueba33@gmail.com', 200, 250, '2025-10-08 22:58:05', NULL, 2, 2, 2);
 
 --
 -- Índices para tablas volcadas
@@ -392,7 +394,7 @@ ALTER TABLE `mundo`
 -- AUTO_INCREMENT de la tabla `nivel`
 --
 ALTER TABLE `nivel`
-  MODIFY `id_nivel` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_nivel` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `partida`
@@ -422,7 +424,7 @@ ALTER TABLE `tipo_arma`
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- Restricciones para tablas volcadas
