@@ -74,10 +74,6 @@ if (isset($_POST['cerrar'])) {
     <source src="../../controller/img/animacion2.mp4" type="video/mp4">
 </video>
 
-<div class="contenedor">
-    <h1>Rainbow Six</h1>
-
-
     <div class="contenedor">
         <h1>Rainbow Six</h1>
 
