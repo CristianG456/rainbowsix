@@ -77,7 +77,12 @@ if (isset($_POST['cerrar'])) {
 <div class="contenedor">
     <h1>Rainbow Six</h1>
 
+
+    <div class="contenedor">
+        <h1>Rainbow Six</h1>
+
     <div class="menu">
+
         <a href="juego/juego.php">Jugar</a>
         <a href="agentes/agentes.php">Agentes</a>
         <a href="armas/armas.php">Armas</a>
