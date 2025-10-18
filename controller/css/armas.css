@@ -154,21 +154,36 @@ progress {
 
 
 .arma {
-    background: rgba(0, 0, 0, 0.6); /* fondo oscuro con transparencia */
+    position: relative; /* Necesario para que el overlay se posicione dentro de la tarjeta */
+    background: rgba(0, 0, 0, 0.6); /* Fondo oscuro con transparencia */
     padding: 12px 10px;
     border-radius: 12px;
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
-    width: 180px; /* ancho fijo para alineación horizontal uniforme */
-    min-height: 220px; /* altura uniforme */
-    transition: transform 0.2s, background 0.2s;
-    flex: 0 0 auto; /* evita que las tarjetas se encogan en flex */
+    width: 180px; /* Ancho fijo para alineación uniforme */
+    min-height: 220px; /* Altura uniforme */
+    transition: transform 0.25s ease, background 0.25s ease;
+    flex: 0 0 auto; /* Evita que las tarjetas se encojan en flex */
+    overflow: hidden; /* Evita que el overlay se desborde */
+    z-index: 1; /* Asegura que la tarjeta esté por encima del fondo */
 }
+
 .arma:hover {
-    background: rgba(50, 0, 0, 0.7); /* un poco más oscuro */
+    background: rgba(50, 0, 0, 0.7);
     transform: scale(1.05);
+}
+/* Si está bloqueada, oscurece la imagen un poco */
+.arma[data-locked="1"] img {
+    filter: brightness(0.65) saturate(0.9);
+}
+
+/* Texto del arma */
+.arma p {
+    font-size: 0.95rem;
+    font-weight: 900;
+    margin: 6px 0 0 0;
 }
 
 /* Ajustes para las imágenes de las armas */
@@ -184,36 +199,28 @@ progress {
 /* Overlay para armas bloqueadas */
 .lock-overlay {
     position: absolute;
-    inset: 0; /* cubre toda la tarjeta */
-    background: rgba(0,0,0,0.72);
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55); /* antes estaba 0.72 */
     border-radius: 12px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     color: #fff;
-    gap: 6px;
     font-weight: 900;
     text-align: center;
 }
+
 .lock-icon {
     font-size: 28px;
+    color: #ffd700;
 }
 .lock-text {
     font-size: 0.95rem;
+    color: #ffd700;
 }
 
-/* Si no está bloqueada, el overlay no está presente; opcional: reducir opacidad de imagen cuando bloqueado */
-.arma[data-locked="1"] img {
-    filter: brightness(0.6) saturate(0.8);
-}
 
-/* Texto debajo de la imagen */
-.arma p {
-    font-size: 0.95rem;
-    font-weight: 900;
-    margin: 6px 0 0 0;
-}
 
 
 @media (max-width: 600px) {
