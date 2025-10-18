@@ -43,7 +43,7 @@ $fila = $sql->fetch();
             <div class="mundo">
                
                 <h2>Ciudad (Normal)</h2>
-                <a href="normal/normal.php">
+                <a href="normal/ingreso_sala.php">
                     <img src="../../../controller/img/ciudad.jpg" alt="desierto" class="imagen-mundo">
                 </a>
             </div>
