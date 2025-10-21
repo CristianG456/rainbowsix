@@ -1,0 +1,181 @@
+/* ====== Estructura general ====== */
+html, body {
+    background-image: url("../img/desierto.webp");
+    background-size: cover;
+    color: white;
+    background-position: center;
+    background-attachment: fixed;
+    margin: 0;
+    padding: 0;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+}
+
+/* ====== Título ====== */
+h2 {
+    margin-top: 5px;
+    text-align: center;
+    font-size: 1.5rem;
+    text-shadow: 2px 2px 5px #000;
+}
+
+/* ====== Contenedor de jugadores ====== */
+.jugadores {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    margin: 20px auto;
+    max-width: 1200px;
+}
+
+/* ====== Card de cada jugador ====== */
+.jugador {
+    background: rgba(0, 0, 0, 0.6);
+    border: 2px solid gold;
+    border-radius: 15px;
+    padding: 15px;
+    text-align: center;
+    width: 200px;
+    transition: transform 0.3s, box-shadow 0.3s;
+    position: relative;
+}
+
+.jugador:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px gold;
+}
+
+/* ====== Imagen del personaje ====== */
+.jugador .avatar {
+    width: 120px;
+    height: 120px;
+    object-fit: contain;
+    margin-bottom: 10px;
+}
+
+/* ====== Texto del jugador ====== */
+.jugador h3 {
+    margin: 5px 0;
+    font-size: 1rem;
+}
+
+.jugador p {
+    margin: 3px 0;
+    font-size: 0.95rem;
+}
+
+/* ====== Barra de vida ====== */
+.vida-barra {
+    width: 100%;
+    height: 12px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 10px;
+    margin-bottom: 8px;
+    overflow: hidden;
+}
+
+.vida-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #00ff00, #a8ff00);
+    transition: width 0.3s ease-in-out;
+}
+
+/* ====== Jugador destacado (tú) ====== */
+.mi-jugador {
+    border: 3px solid #360101; /* borde turquesa */
+    box-shadow: 0 0 15px #502828;
+}
+
+.tu-label {
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #00ffea;
+}
+
+/* ====== Estado de eliminado ====== */
+.eliminado {
+    opacity: 0.6;
+    filter: grayscale(70%);
+}
+
+.eliminado .status {
+    color: red;
+    font-weight: bold;
+    display: block;
+    margin-top: 5px;
+}
+
+/* ====== Acciones ====== */
+.acciones {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 1px;
+}
+
+.acciones form {
+    background: rgba(0,0,0,0.6);
+    padding: 15px 20px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.acciones label {
+    font-weight: bold;
+}
+
+.acciones select, 
+.acciones button {
+    padding: 8px;
+    border-radius: 5px;
+    border: none;
+    font-size: 0.9rem;
+}
+
+.acciones button {
+    background: gold;
+    color: #000;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s;
+}
+
+.acciones button:hover {
+    background: orange;
+}
+
+/* ====== Log de combate ====== */
+#log {
+    width: 100%;
+    max-width: 900px;
+    margin: 10px auto;
+    background: rgba(0,0,0,0.5);
+    padding: 10px;
+    border-radius: 10px;
+    height: 150px;
+    overflow-y: auto;
+    font-size: 0.9rem;
+}
+
+.vida-barra {
+    width: 100%;
+    height: 20px;
+    background-color: #555;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 5px;
+}
+
+.vida-fill {
+    height: 100%;
+    width: 100%;
+    transition: width 0.5s ease; /* animación suave */
+    background-color: green;
+}
+
+.vida-fill.medio { background-color: yellow; }
+.vida-fill.bajo { background-color: red; }

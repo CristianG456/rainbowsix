@@ -4,173 +4,236 @@ require_once("../../../../database/db.php");
 $db = new Database();
 $con = $db->conectar();
 
-$usu = $_SESSION['id_usuario'] ?? null;
-if(!$usu){
-    header("Location: ingreso_sala.php");
-    exit;
+if (!isset($_SESSION['id_usuario'])) {
+    exit("No hay sesión activa");
 }
 
-if(!isset($_GET['partida']) || !isset($_GET['sala'])){
-    echo "Parámetros de partida o sala faltantes.";
-    exit;
+$id_usuario = $_SESSION['id_usuario'];
+$id_sala = $_GET['id_sala'] ?? 0;
+if (!$id_sala) die("Sala no válida");
+
+// -----------------------------
+// Buscar partida activa en la sala
+// -----------------------------
+$sqlPartida = $con->prepare("SELECT * FROM partida WHERE id_sala=? AND id_estado_part=1 LIMIT 1");
+$sqlPartida->execute([$id_sala]);
+$partidaExistente = $sqlPartida->fetch(PDO::FETCH_ASSOC);
+
+if ($partidaExistente) {
+    $id_partida = $partidaExistente['id_partida'];
+} else {
+    // Crear nueva partida
+    $stmt = $con->prepare("INSERT INTO partida (fecha_inicio, id_estado_part, id_sala) VALUES (NOW(),1,?)");
+    $stmt->execute([$id_sala]);
+    $id_partida = $con->lastInsertId();
 }
 
-$id_partida = intval($_GET['partida']);
-$id_sala = intval($_GET['sala']);
+// -----------------------------
+// Insertar jugador si no existe y menos de 5 jugadores
+// -----------------------------
+$sqlJugadores = $con->prepare("SELECT COUNT(*) FROM detalle_usuario_partida WHERE id_partida=?");
+$sqlJugadores->execute([$id_partida]);
+$cantidad = $sqlJugadores->fetchColumn();
 
-// Obtener jugadores de la partida
-$stmt = $con->prepare("
-    SELECT DISTINCT u.id_usuario, u.nomb_usu, u.vida
-    FROM detalle_usuario_partida d
-    INNER JOIN usuario u ON (u.id_usuario = d.id_usuario1 OR u.id_usuario = d.id_usuario2)
-    WHERE d.id_partida = ?
+$sqlYaEsta = $con->prepare("SELECT * FROM detalle_usuario_partida WHERE id_partida=? AND (id_usuario1=? OR id_usuario2=?)");
+$sqlYaEsta->execute([$id_partida,$id_usuario,$id_usuario]);
+
+if (!$sqlYaEsta->fetch() && $cantidad<5) {
+    $sqlInsert = $con->prepare("INSERT INTO detalle_usuario_partida (puntos_total,id_usuario1,id_partida) VALUES (0,?,?)");
+    $sqlInsert->execute([$id_usuario,$id_partida]);
+}
+
+// -----------------------------
+// 🔹 Reiniciar vida de jugadores al entrar a una nueva partida
+// -----------------------------
+$sqlJugadoresPartida = $con->prepare("
+    SELECT u.id_usuario 
+    FROM usuario u
+    INNER JOIN detalle_usuario_partida d 
+        ON u.id_usuario=d.id_usuario1 OR u.id_usuario=d.id_usuario2
+    WHERE d.id_partida=?
 ");
-$stmt->execute([$id_partida]);
-$jugadores = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$sqlJugadoresPartida->execute([$id_partida]);
+$jugadoresEnPartida = $sqlJugadoresPartida->fetchAll(PDO::FETCH_COLUMN);
 
-// Obtener armas
-$stmt2 = $con->prepare("SELECT * FROM armas");
-$stmt2->execute();
-$armas = $stmt2->fetchAll(PDO::FETCH_ASSOC);
+if (!empty($jugadoresEnPartida)) {
+    $placeholders = implode(',', array_fill(0, count($jugadoresEnPartida), '?'));
+    $upd = $con->prepare("UPDATE usuario SET vida = 200 WHERE id_usuario IN ($placeholders) AND vida = 0");
+    $upd->execute($jugadoresEnPartida);
+}
+
+// -----------------------------
+// Obtener jugadores de la partida
+// -----------------------------
+$sqlJugadores = $con->prepare("
+SELECT u.id_usuario,u.nomb_usu,u.vida,u.puntos,a.url_personaje
+FROM usuario u
+INNER JOIN avatar a ON u.id_avatar=a.id_avatar
+INNER JOIN detalle_usuario_partida d ON u.id_usuario=d.id_usuario1 OR u.id_usuario=d.id_usuario2
+WHERE d.id_partida=?
+");
+$sqlJugadores->execute([$id_partida]);
+$jugadores = $sqlJugadores->fetchAll(PDO::FETCH_ASSOC);
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="utf-8">
-<title>Combate - Partida #<?= htmlspecialchars($id_partida) ?></title>
+<meta charset="UTF-8">
+<title>Combate</title>
+<link rel="stylesheet" href="../../../../controller/css/combate.css">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<style>
-body{font-family:Arial,sans-serif;padding:16px}
-h1{margin-bottom:8px}
-#jugadores{display:flex;flex-wrap:wrap;gap:12px}
-.jugador{border:1px solid #ccc;padding:10px;border-radius:6px;width:160px;text-align:center;background:#fafafa}
-.vida{font-weight:bold;color:green}
-.eliminado{font-weight:bold;color:red;}
-form{margin-top:18px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-form label{font-size:14px;margin-right:6px}
-select,button[type="submit"]{padding:6px}
-#log-combate{border:1px solid #ddd;padding:10px;margin-top:16px;height:210px;overflow:auto;background:#fff}
-#log-combate p{margin:6px 0;font-size:14px}
-</style>
 </head>
 <body>
+<h2>Partida #<?= $id_partida ?></h2>
 
-<h1>Combate — Partida #<?= htmlspecialchars($id_partida) ?></h1>
-
-<div id="jugadores">
-    <?php foreach($jugadores as $j): ?>
-        <div class="jugador" data-id="<?= (int)$j['id_usuario'] ?>">
-            <h4><?= htmlspecialchars($j['nomb_usu']) ?> <?= ($j['id_usuario']==$usu) ? "<small>(Tú)</small>" : "" ?></h4>
-            <p>Vida: <span class="vida"><?= (int)$j['vida'] ?></span></p>
-        </div>
-    <?php endforeach; ?>
+<div class="jugadores" id="jugadores">
+<?php foreach($jugadores as $j):
+    $esMiJugador = $j['id_usuario']==$id_usuario;
+    $vidaPorcentaje = max(0,min(100,($j['vida']/200)*100));
+?>
+<div class="jugador <?= $j['vida']<=0?'eliminado':'' ?> <?= $esMiJugador?'mi-jugador':'' ?>" data-id="<?= $j['id_usuario'] ?>" data-vida="<?= $vidaPorcentaje ?>">
+    <div class="vida-barra"><div class="vida-fill" style="width:<?= $vidaPorcentaje ?>%"></div></div>
+    <img src="/rainbowsix/controller/img/<?= basename($j['url_personaje']) ?>" class="avatar">
+    <h3><?= htmlspecialchars($j['nomb_usu']) ?> <?= $esMiJugador?'<span>(Tú)</span>':'' ?></h3>
+    <p>Puntos: <?= $j['puntos'] ?></p>
+</div>
+<?php endforeach; ?>
 </div>
 
-<!-- Formulario de ataque -->
-<form id="form-ataque">
-    <label for="sel-objetivo">Objetivo:</label>
-    <select id="sel-objetivo" name="id_objetivo" required>
-        <?php foreach($jugadores as $j): if($j['id_usuario']==$usu) continue; ?>
-            <option value="<?= (int)$j['id_usuario'] ?>"><?= htmlspecialchars($j['nomb_usu']) ?></option>
-        <?php endforeach; ?>
+<div class="acciones">
+<form id="ataqueForm">
+    <label>Enemigo:</label>
+    <select name="id_enemigo" required>
+        <option value="">--Selecciona--</option>
+        <?php foreach($jugadores as $j):
+            if($j['id_usuario']!=$id_usuario && $j['vida']>0): ?>
+                <option value="<?= $j['id_usuario'] ?>"><?= htmlspecialchars($j['nomb_usu']) ?></option>
+        <?php endif; endforeach; ?>
     </select>
 
-    <label for="sel-arma">Arma:</label>
-    <select id="sel-arma" name="id_arma" required>
-        <?php foreach($armas as $a): ?>
-            <option value="<?= (int)$a['id_arma'] ?>"><?= htmlspecialchars($a['nomb_arma']) ?></option>
-        <?php endforeach; ?>
+    <label>Arma:</label>
+    <select name="id_arma" required>
+    <?php
+    $armas = $con->prepare("SELECT id_arma,nomb_arma FROM armas");
+    $armas->execute();
+    foreach($armas->fetchAll() as $arma){
+        echo "<option value='{$arma['id_arma']}'>{$arma['nomb_arma']}</option>";
+    }
+    ?>
     </select>
 
-    <label for="sel-zona">Zona:</label>
-    <select id="sel-zona" name="zona" required>
-        <option value="cuerpo">Cuerpo</option>
+    <label>Zona:</label>
+    <select name="zona" required>
         <option value="cabeza">Cabeza</option>
+        <option value="torso">Torso</option>
     </select>
 
     <button type="submit">Atacar</button>
 </form>
 
-<div id="log-combate">
-    <p><em>Log de combate</em></p>
+<button id="salirBtn">Salir de la partida</button>
 </div>
 
+<div id="log"></div>
+
 <script>
-const PARTIDA = <?= json_encode($id_partida) ?>;
+const id_partida = <?= $id_partida ?>;
+const id_usuario = <?= $id_usuario ?>;
+const rutaImgBase = "/rainbowsix/controller/img";
 
-// Actualizar vidas de jugadores
-function actualizarVidas(){
-    const ids = $('.jugador').map(function(){ return $(this).data('id'); }).get();
-    if(ids.length===0) return;
+// Guardamos los IDs de jugadores que ya están en pantalla
+let jugadoresActuales = {};
+$("#jugadores .jugador").each(function(){
+    const id = $(this).data("id").toString();
+    jugadoresActuales[id] = parseFloat($(this).attr("data-vida"));
+});
 
-    $.ajax({
-        url: 'estado_combate.php',
-        method: 'POST',
-        data: { ids: ids.join(',') },
-        dataType: 'json',
-        success(res){
-            if(res.vidas){
-                let vivos = 0;
-                let ultimoVivo = null;
+// ---------------------------
+// Actualizar jugadores en tiempo real
+// ---------------------------
+function actualizarJugadores(){
+    $.getJSON("actualizar_jugadores.php?id_partida="+id_partida, function(data){
+        data.forEach(j => {
+            const idStr = j.id_usuario.toString();
+            const vidaPorcentaje = Math.max(0, Math.min(100, (j.vida/200)*100));
+            const esMiJugador = j.id_usuario == id_usuario;
 
-                for(const id in res.vidas){
-                    const vida = res.vidas[id];
-                    const elem = $('.jugador[data-id="'+id+'"] .vida');
-                    if(vida <= 0){
-                        elem.text('Eliminado').addClass('eliminado');
-                    } else {
-                        elem.text(vida).removeClass('eliminado');
-                        vivos++;
-                        ultimoVivo = id;
-                    }
-                }
-
-                // Revisar si solo queda un jugador vivo
-                if(vivos===1){
-                    $('#log-combate').prepend('<p style="color:green;font-weight:bold;">¡Jugador #' + ultimoVivo + ' ha ganado la partida!</p>');
-                    // Reiniciar vidas de todos los jugadores a 200
-                    $.ajax({
-                        url: 'reiniciar_vidas.php',
-                        method: 'POST',
-                        data: { id_partida: PARTIDA },
-                        success(){ console.log('Vidas reiniciadas'); }
-                    });
+            // Solo actualizar la vida y puntos de ese jugador
+            const jugadorDiv = $("#jugadores .jugador[data-id='"+idStr+"']");
+            if(jugadorDiv.length){
+                const vidaFill = jugadorDiv.find(".vida-fill");
+                vidaFill.css("width", vidaPorcentaje + "%"); // sin animación
+                jugadorDiv.find("p").text("Puntos: " + j.puntos);
+                if(j.vida <= 0) jugadorDiv.addClass("eliminado");
+            } else {
+                // Si es un jugador nuevo, agregarlo
+                const imgSrc = rutaImgBase + "/" + j.url_personaje;
+                $("#jugadores").append(`
+                    <div class="jugador" data-id="${idStr}" data-vida="${vidaPorcentaje}">
+                        <div class="vida-barra"><div class="vida-fill" style="width:${vidaPorcentaje}%"></div></div>
+                        <img src="${imgSrc}" class="avatar">
+                        <h3>${j.nomb_usu}${esMiJugador?' (Tú)':''}</h3>
+                        <p>Puntos: ${j.puntos}</p>
+                    </div>
+                `);
+                // Agregar al select si no soy yo
+                if(!esMiJugador){
+                    $("#ataqueForm select[name='id_enemigo']").append(`<option value="${idStr}">${j.nomb_usu}</option>`);
                 }
             }
-        }
+        });
+
+        // Eliminar jugadores que ya no están
+        $("#jugadores .jugador").each(function(){
+            const id = $(this).data("id").toString();
+            if(!data.some(j => j.id_usuario.toString()===id)){
+                $(this).remove();
+                $("#ataqueForm select[name='id_enemigo'] option[value='"+id+"']").remove();
+            }
+        });
     });
 }
-setInterval(actualizarVidas,1500);
-$(document).ready(actualizarVidas);
 
-// Enviar ataque
-$('#form-ataque').on('submit', function(e){
-    e.preventDefault();
-    const id_objetivo = $('#sel-objetivo').val();
-    const id_arma = $('#sel-arma').val();
-    const zona = $('#sel-zona').val();
-    if(!id_objetivo || !id_arma || !zona){
-        alert('Selecciona objetivo, arma y zona.');
-        return;
-    }
+// Polling cada 2 segundos
+setInterval(actualizarJugadores, 2000);
 
-    $.ajax({
-        url: 'combatee.php',
-        method: 'POST',
-        data: { id_partida: PARTIDA, id_objetivo, id_arma, zona },
-        dataType: 'json',
-        success(res){
-            if(res.error){
-                $('#log-combate').prepend('<p style="color:red;">'+res.error+'</p>');
-                return;
+// ---------------------------
+// Botón Salir de la partida
+// ---------------------------
+$("#salirBtn").click(async function(){
+    if(confirm("¿Salir de la partida?")){
+        try {
+            const form = new FormData();
+            form.append("id_partida", id_partida);
+
+            const resp = await fetch("salir_partida.php", { method:"POST", body:form });
+            const data = await resp.json();
+
+            if(data.ok){
+                alert("Has salido de la partida.");
+                window.location.href="ingreso_sala.php";
+            } else {
+                alert("Error al salir: "+(data.error||"Desconocido"));
             }
-            const msg = `${res.atacante_nombre} ha atacado a ${res.objetivo_nombre} con ${res.arma_nombre} en ${res.zona} causando ${res.dano} de daño. Vida restante: ${res.vida_restante}`;
-            $('#log-combate').prepend('<p>'+msg+'</p>');
-            actualizarVidas();
-        },
-        error(xhr){ console.error('Error en AJAX combate:', xhr.responseText); }
+        } catch(err){
+            console.error(err);
+            alert("Error al conectar con el servidor.");
+        }
+    }
+});
+
+// ---------------------------
+// Ataques
+// ---------------------------
+$("#ataqueForm").submit(function(e){
+    e.preventDefault();
+    $.post("actualizar_combate.php", $(this).serialize(), function(res){
+        $("#log").prepend("<p>"+res+"</p>");
+        actualizarJugadores(); // refrescar inmediatamente
     });
 });
 </script>
+
 </body>
 </html>

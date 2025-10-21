@@ -6,7 +6,7 @@ $con = $db->conectar();
 
 $usu = $_SESSION['id_usuario'] ?? null;
 if(!$usu){
-    die("No has iniciado sesión. <a href='../../../iniciosesion.php'>Login</a>");
+    die("No has iniciado sesión. <a href='../../../../iniciosesion.php'>Login</a>");
 }
 
 $id_partida = $_GET['partida'] ?? null;

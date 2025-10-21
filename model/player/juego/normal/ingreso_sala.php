@@ -6,7 +6,7 @@ $con = $db->conectar();
 
 $usu = $_SESSION['id_usuario'] ?? null;
 if (!$usu) {
-    header('Location: ../../../iniciosesion.php');
+    header('Location: ../../../../iniciosesion.php');
     exit;
 }
 
@@ -22,7 +22,7 @@ function inicializarSalasBase($con, $cantidad = 5) {
             VALUES (NOW(), 3, 1, 1, :url)
         ");
         $stmt->execute([':url' => 'auto_'.time().'_'.$i]);
-        usleep(1000); // Evitar IDs duplicados en la URL
+        usleep(1000);
     }
 }
 
@@ -30,7 +30,6 @@ function inicializarSalasBase($con, $cantidad = 5) {
 function unirJugador($con, $id_usuario, $id_sala, $maxJugadores = 5) {
     $con->beginTransaction();
     try {
-        // Buscar última partida activa de la sala
         $stmt = $con->prepare("
             SELECT * FROM partida 
             WHERE id_sala = ? AND id_estado_part NOT IN (4,8)
@@ -43,13 +42,11 @@ function unirJugador($con, $id_usuario, $id_sala, $maxJugadores = 5) {
         if ($partida) {
             $id_partida = $partida['id_partida'];
 
-            // Contar jugadores activos
             $cnt = $con->prepare("SELECT COUNT(*) FROM detalle_usuario_partida WHERE id_partida = ?");
             $cnt->execute([$id_partida]);
             $jugadoresActuales = $cnt->fetchColumn();
 
             if ($jugadoresActuales < $maxJugadores) {
-                // Insertar jugador solo si no existe ya
                 $check = $con->prepare("
                     SELECT * FROM detalle_usuario_partida 
                     WHERE id_partida = ? AND (id_usuario1 = ? OR id_usuario2 = ?)
@@ -64,7 +61,6 @@ function unirJugador($con, $id_usuario, $id_sala, $maxJugadores = 5) {
                     $sql->execute([':id_usuario' => $id_usuario, ':id_partida' => $id_partida]);
                 }
             } else {
-                // Partida llena → crear nueva
                 $stmt = $con->prepare("
                     INSERT INTO partida (fecha_inicio, fecha_fin, cantidad_jug, id_estado_part, id_sala)
                     VALUES (NOW(), NOW(), 0, 3, ?)
@@ -80,7 +76,6 @@ function unirJugador($con, $id_usuario, $id_sala, $maxJugadores = 5) {
                 $sql->execute([':id_usuario' => $id_usuario, ':id_partida' => $id_partida]);
             }
         } else {
-            // Primera partida de la sala
             $stmt = $con->prepare("
                 INSERT INTO partida (fecha_inicio, fecha_fin, cantidad_jug, id_estado_part, id_sala)
                 VALUES (NOW(), NOW(), 0, 3, ?)
@@ -96,7 +91,6 @@ function unirJugador($con, $id_usuario, $id_sala, $maxJugadores = 5) {
             $sql->execute([':id_usuario' => $id_usuario, ':id_partida' => $id_partida]);
         }
 
-        // Actualizar cantidad_jug
         $cnt = $con->prepare("SELECT COUNT(*) FROM detalle_usuario_partida WHERE id_partida = ?");
         $cnt->execute([$id_partida]);
         $nueva = $cnt->fetchColumn();
@@ -112,10 +106,8 @@ function unirJugador($con, $id_usuario, $id_sala, $maxJugadores = 5) {
     }
 }
 
-/* 🔹 Inicializar salas base */
 inicializarSalasBase($con, 5);
 
-/* 🔹 Listar todas las salas */
 $sqlSalas = $con->prepare("
     SELECT s.id_sala, s.id_mundo, m.nomb_mundo, s.id_estado_sala, e.estado
     FROM sala s
@@ -131,7 +123,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_sala'])) {
     $id_sala = intval($_POST['id_sala']);
     try {
         $id_partida = unirJugador($con, $usu, $id_sala, 5);
-        header("Location: ./combate.php?partida=$id_partida&sala=$id_sala");
+        // 🔹 Aquí usamos id_sala en GET también
+        header("Location: ./combate.php?id_sala=$id_sala&partida=$id_partida");
         exit;
     } catch(PDOException $e) {
         echo "<script>alert('Error al unirse: ".addslashes($e->getMessage())."');</script>";
