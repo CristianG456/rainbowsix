@@ -60,8 +60,6 @@ session_start();
 
         <div class="mt-4">
           <button type="submit" name='iniciar' id='iniciar' class="btn btn-danger w-100 mt-3"></i>Inicio Sesión</button>
-
-
         </div>
 
         <div class="text-center mt-3">
@@ -82,13 +80,13 @@ session_start();
         <div class="modal-body">
           <p class="small-muted">Ingresa el correo asociado a tu cuenta y te enviaremos instrucciones.</p>
 
-          <form id="recoverForm" method="POST" action="controller/recover.php" autocomplete="off">
+          <form id="recoverForm" method="POST" action="recu_contrasena.php" autocomplete="off">
             <div class="mb-3">
-              <label for="recoverEmail" class="form-label">Correo electrónico</label>
-              <input id="recoverEmail" name="email" type="email" class="form-control" placeholder="tu@correo.com" required>
+              <label for="input_correo" class="form-label">Correo electrónico</label>
+              <input id="input_correo" name="input_correo" type="email" class="form-control" placeholder="tu@correo.com" required>
             </div>
             <div class="d-grid">
-              <button type="submit" class="btn btn-danger">Enviar instrucciones</button>
+              <button type="submit" name="inicioc" id="inicioc" class="btn btn-danger">Enviar instrucciones</button>
             </div>
           </form>
         </div>
