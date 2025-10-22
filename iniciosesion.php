@@ -78,7 +78,7 @@ session_start();
           <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
         </div>
         <div class="modal-body">
-          <p class="small-muted">Ingresa el correo asociado a tu cuenta y te enviaremos instrucciones.</p>
+          <p class="small-muted">Ingresa el correo asociado a tu cuenta y te enviaremos un codigo.</p>
 
           <form id="recoverForm" method="POST" action="recu_contrasena.php" autocomplete="off">
             <div class="mb-3">

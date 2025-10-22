@@ -28,26 +28,26 @@ $fila = $sql->fetch();
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top shadow-sm custom-navbar">
-            <div class="container">
-                <a class="navbar-brand d-flex align-items-center" href="admin.php">
-                    <img src="../../controller/img/logo4.jpg" alt="Logo" class="logo-navbar">
-                    <span class="fw-bold"> Rainbow Six Siege </span>
-                </a>
-            </div>
-            <div class="links-header">
-                <a class="volver bi bi-arrow-left-circle" href="admin.php"> Volver </a>
-            </div>
-        </nav>
-    </header>
+<header>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top shadow-sm custom-navbar">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="admin.php">
+                <img src="../../controller/img/logo4.jpg" alt="Logo" class="logo-navbar">
+                <span class="fw-bold"> Rainbow Six Siege </span>
+            </a>
+        </div>
+        <div class="links-header">
+            <a class="volver bi bi-arrow-left-circle" href="admin.php"> Volver </a>
+        </div>
+    </nav>
+</header>
 
-    <div class="container mt-5 pt-5">
-        <form method="POST" class="d-flex justify-content-center mb-4">
-            <input type="text" name="buscar" class="form-control w-50 me-2" placeholder="Buscar jugador...">
-            <button type="submit" class="btn btn-primary">Buscar</button>
-        </form>
-    </div>
+<div class="container mt-5 pt-5">
+    <form method="POST" class="d-flex justify-content-center mb-4">
+        <input type="text" name="buscar" class="form-control w-50 me-2" placeholder="Buscar jugador...">
+        <button type="submit" class="btn btn-primary">Buscar</button>
+    </form>
+</div>
 
 <?php
 if (isset($_POST['buscar'])) {
@@ -61,7 +61,7 @@ if (isset($_POST['buscar'])) {
         INNER JOIN rol r ON u.id_rol = r.id_rol
         INNER JOIN nivel n ON u.id_nivel = n.id_nivel
         INNER JOIN estado e ON u.id_estado_usu = e.id_estado
-        WHERE u.nomb_usu LIKE :b1 OR u.correo LIKE :b2 OR r.nom_rol LIKE :b3 OR e.estado LIKE :b4
+        WHERE (u.nomb_usu LIKE :b1 OR u.correo LIKE :b2 OR r.nom_rol LIKE :b3 OR e.estado LIKE :b4)
         AND u.id_rol = :id_rol
     ");
     $searchTerm = "%$busqueda%";
@@ -76,7 +76,7 @@ if (isset($_POST['buscar'])) {
 
     if ($resultados) {
         echo '<div class="container"><table class="table table-dark table-striped">';
-        echo '<thead><tr><th>ID</th><th>Nombre</th><th>Correo</th><th>Rol</th><th>Nivel</th><th>Estado</th><th>Acciones</th></tr></thead><tbody>';
+        echo '<thead><tr><th>ID</th><th>Nombre</th><th>Correo</th><th>Rol</th><th>Nivel</th><th>Estado</th><th>Acción</th></tr></thead><tbody>';
         foreach ($resultados as $fila) {
             echo "<tr>
                     <td>{$fila['id_usuario']}</td>
@@ -147,4 +147,3 @@ document.querySelectorAll('.editar-btn').forEach(button => {
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-

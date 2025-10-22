@@ -5,10 +5,19 @@ $con = $db->conectar();
 session_start();
 
 if (isset($_POST["validar"])) {
-    $user = ($_POST['nomb_usu']);
-    $contras = ($_POST['contra_usu']); 
-    $correo = ($_POST['correo']);
+
+    $user = trim($_POST['nomb_usu']);
+    $contras = trim($_POST['contra_usu']); 
+    $correo = trim($_POST['correo']);
     
+    // Validar campos vacíos
+    if ($user == "" || $contras == "" || $correo == "") {
+        echo '<script>alert("Existen datos vacíos, por favor complete todos los campos.");</script>';
+        echo '<script>window.location="registro.php";</script>';
+        exit;
+    }
+
+    // Validar duplicados
     $sql = $con->prepare("SELECT * FROM usuario WHERE nomb_usu = ? OR correo = ?");
     $sql->execute([$user, $correo]);
     $fila = $sql->fetch(PDO::FETCH_ASSOC);
@@ -16,33 +25,36 @@ if (isset($_POST["validar"])) {
     if ($fila) {
         echo '<script>alert("El usuario o correo ya existen, por favor cámbielos.");</script>';
         echo '<script>window.location="registro.php";</script>';
+        exit;
     }
-    elseif ($user == "" || $contras == "" || $correo == "") {
-        echo '<script>alert("Existen datos vacíos, por favor complete todos los campos.");</script>';
-        echo '<script>window.location="registro.php";</script>';
-    }
-    else{
-        $passhash = password_hash($contras, PASSWORD_DEFAULT, array("cost"=>5));
 
+    // Encriptar contraseña
+    $passhash = password_hash($contras, PASSWORD_DEFAULT, array("cost" => 10));
 
-        $insertSQL = $con->prepare
-        (" INSERT INTO usuario 
-                (nomb_usu, contra_usu, correo, vida, ultimo_ingreso, id_rol, id_nivel, id_estado_usu, id_avatar)
-            VALUES 
-                (?, ?, ?, 200, NOW(), 2, 1, 2, NULL)");
-        
-        $resultado = $insertSQL->execute([$user, $passhash, $correo]);
+    // Registrar usuario bloqueado (id_estado_usu = 2)
+    $insertSQL = $con->prepare("
+        INSERT INTO usuario 
+            (nomb_usu, contra_usu, correo, vida, ultimo_ingreso, id_rol, id_nivel, id_estado_usu, id_avatar)
+        VALUES 
+            (?, ?, ?, 200, NOW(), 2, 1, 2, NULL)
+    ");
+
+    $resultado = $insertSQL->execute([$user, $passhash, $correo]);
 
     if ($resultado) {
-        echo '<script>alert("Registro exitoso.");</script>';
-        echo '<script>window.location="registro.php";</script>';
+        echo '<script>
+            alert("Registro exitoso. Espera a que el administrador active tu cuenta.");
+            window.location="iniciosesion.php";
+        </script>';
     } else {
-        echo '<script>alert("Error al registrar el usuario.");</script>';
-        echo '<script>window.location="registro.php";</script>';
+        echo '<script>
+            alert("Error al registrar el usuario.");
+            window.location="registro.php";
+        </script>';
     }
 }
-}
 ?>
+
 
 <!DOCTYPE html>
 <html lang="es">
