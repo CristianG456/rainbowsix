@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 10-10-2025 a las 18:55:33
+-- Tiempo de generación: 23-10-2025 a las 04:55:11
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -30,8 +30,8 @@ SET time_zone = "+00:00";
 CREATE TABLE `armas` (
   `id_arma` int(11) NOT NULL,
   `nomb_arma` text NOT NULL,
-  `daño_cabeza` int(11) NOT NULL,
-  `daño_torso` int(11) NOT NULL,
+  `dano_cabeza` int(11) NOT NULL,
+  `dano_torso` int(11) NOT NULL,
   `id_tipo_arma` int(11) NOT NULL,
   `cant_balas` int(11) DEFAULT NULL,
   `img_arma` varchar(500) NOT NULL,
@@ -42,7 +42,7 @@ CREATE TABLE `armas` (
 -- Volcado de datos para la tabla `armas`
 --
 
-INSERT INTO `armas` (`id_arma`, `nomb_arma`, `daño_cabeza`, `daño_torso`, `id_tipo_arma`, `cant_balas`, `img_arma`, `id_nivel_arma`) VALUES
+INSERT INTO `armas` (`id_arma`, `nomb_arma`, `dano_cabeza`, `dano_torso`, `id_tipo_arma`, `cant_balas`, `img_arma`, `id_nivel_arma`) VALUES
 (1, 'Puño', 10, 5, 1, NULL, '\"C:\\xampp\\htdocs\\rainbowsix\\controller\\img\\puño.jpg\"', 1),
 (2, 'Cuchillo', 10, 5, 1, NULL, '\"C:\\xampp\\htdocs\\rainbowsix\\controller\\img\\cuchillo.png\"', 1),
 (3, 'Pistola', 20, 10, 1, 15, '\"C:\\xampp\\htdocs\\rainbowsix\\controller\\img\\pistola.png\"', 2),
@@ -84,9 +84,9 @@ CREATE TABLE `detalle_usuario_partida` (
   `id_usuario_partida` int(11) NOT NULL,
   `puntos_total` int(11) NOT NULL,
   `id_usuario1` int(11) NOT NULL,
-  `id_usuario2` int(11) NOT NULL,
+  `id_usuario2` int(11) DEFAULT NULL,
   `id_partida` int(11) NOT NULL,
-  `id_arma` int(11) NOT NULL
+  `id_arma` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -168,15 +168,10 @@ CREATE TABLE `partida` (
   `fecha_fin` datetime NOT NULL,
   `cantidad_jug` int(11) NOT NULL,
   `id_estado_part` int(11) NOT NULL,
-  `id_sala` int(11) NOT NULL
+  `id_sala` int(11) NOT NULL,
+  `id_ganador` int(10) DEFAULT NULL,
+  `inicio_cuenta_regresiva` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `partida`
---
-
-INSERT INTO `partida` (`id_partida`, `fecha_inicio`, `fecha_fin`, `cantidad_jug`, `id_estado_part`, `id_sala`) VALUES
-(1, '2025-10-06 23:48:12', '2025-10-06 23:48:12', 5, 5, 1);
 
 -- --------------------------------------------------------
 
@@ -217,7 +212,16 @@ CREATE TABLE `sala` (
 --
 
 INSERT INTO `sala` (`id_sala`, `fecha_creacion`, `url_sala`, `id_estado_sala`, `id_mundo`, `id_nivel`) VALUES
-(1, '2025-10-06 23:47:29', 'prueba', 3, 1, 1);
+(1, '2025-10-06 23:47:29', '', 3, 1, 1),
+(2, '2025-10-16 10:54:43', '', 3, 1, 1),
+(3, '2025-10-16 10:54:43', '', 3, 1, 1),
+(4, '2025-10-16 10:54:43', '', 3, 1, 1),
+(5, '2025-10-16 10:54:43', '', 3, 1, 1),
+(6, '2025-10-17 23:26:19', 'sala_auto_1760761579_290', 3, 1, 1),
+(7, '2025-10-17 23:29:01', 'sala_auto_1760761741_617', 3, 1, 1),
+(8, '2025-10-17 23:29:06', 'sala_auto_1760761746_749', 3, 1, 1),
+(9, '2025-10-17 23:32:51', 'sala_auto_1760761971_342', 3, 1, 1),
+(10, '2025-10-17 23:34:28', 'sala_auto_1760762068_806', 3, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -251,7 +255,7 @@ CREATE TABLE `usuario` (
   `contra_usu` varchar(500) NOT NULL,
   `correo` varchar(250) NOT NULL,
   `vida` int(11) NOT NULL,
-  `puntos` int(11) DEFAULT NULL,
+  `puntos` int(11) NOT NULL,
   `ultimo_ingreso` datetime NOT NULL,
   `id_avatar` int(11) DEFAULT NULL,
   `id_rol` int(11) NOT NULL,
@@ -264,12 +268,13 @@ CREATE TABLE `usuario` (
 --
 
 INSERT INTO `usuario` (`id_usuario`, `nomb_usu`, `contra_usu`, `correo`, `vida`, `puntos`, `ultimo_ingreso`, `id_avatar`, `id_rol`, `id_nivel`, `id_estado_usu`) VALUES
-(3, 'kevin1', '$2y$05$fSw5EsGzaKGmxvFW0U1v4.IoyUmxgLQ2BJhaPtBN69LAPzwMhS0y6', 'prueba1@gmail.com', 200, NULL, '2025-09-29 23:42:11', 3, 2, 1, 1),
-(4, 'kevin2', '$2y$05$CAogpD6U6PNmLJ5UyFQBAe7psQ2G04NRw3A2jnHFe4Q7XalCLy/1u', 'prueba@gmail.com', 200, NULL, '2025-09-29 23:49:00', 4, 2, 1, 2),
-(5, 'admin1', '$2y$05$tev8R65QSkIbN/Q9mCrqGua9U5ETvGkwm8SYYJLl4ivbCniMjf22G', 'admin1@gmail.com', 200, NULL, '2025-09-30 00:10:35', NULL, 1, 1, 2),
-(6, 'admin2', '$2y$05$S7rJ1au/Ixbit.d5j/.fq.MPv63ln6fU7hlym56wWGr3F3U4eeKkm', 'admin2@gmail.com', 200, NULL, '2025-09-30 00:10:46', NULL, 1, 1, 2),
-(7, 'Cronos', '$2y$05$AoCXnC9gW2p3ZnMxZ0p.ku5HAqEaaDQIx/BAai8aScYgs7qIkUbtm', 'cristiancronos123@gmail.com', 200, NULL, '2025-09-30 16:55:35', NULL, 2, 1, 2),
-(8, 'kevin3', '$2y$05$rG8RY0XSWd3m1QC.EkyH7O.KlOMY0RTYw7/eJ2G2J6UR5Wp1HCu7u', 'prueba33@gmail.com', 200, 250, '2025-10-08 22:58:05', NULL, 2, 2, 2);
+(3, 'kevin1', '$2y$05$fSw5EsGzaKGmxvFW0U1v4.IoyUmxgLQ2BJhaPtBN69LAPzwMhS0y6', 'prueba1@gmail.com', 200, 5310, '2025-09-29 23:42:11', 2, 2, 4, 1),
+(4, 'kevin2', '$2y$05$CAogpD6U6PNmLJ5UyFQBAe7psQ2G04NRw3A2jnHFe4Q7XalCLy/1u', 'prueba@gmail.com', 200, 3980, '2025-09-29 23:49:00', 1, 2, 4, 1),
+(5, 'admin1', '$2y$05$tev8R65QSkIbN/Q9mCrqGua9U5ETvGkwm8SYYJLl4ivbCniMjf22G', 'admin1@gmail.com', 200, 0, '2025-09-30 00:10:35', NULL, 1, 1, 2),
+(6, 'admin2', '$2y$05$S7rJ1au/Ixbit.d5j/.fq.MPv63ln6fU7hlym56wWGr3F3U4eeKkm', 'admin2@gmail.com', 200, 0, '2025-09-30 00:10:46', NULL, 1, 1, 2),
+(7, 'Cronos', '$2y$05$AoCXnC9gW2p3ZnMxZ0p.ku5HAqEaaDQIx/BAai8aScYgs7qIkUbtm', 'cristiancronos123@gmail.com', 200, 510, '2025-09-30 16:55:35', 3, 2, 2, 1),
+(8, 'kevin3', '$2y$05$rG8RY0XSWd3m1QC.EkyH7O.KlOMY0RTYw7/eJ2G2J6UR5Wp1HCu7u', 'prueba33@gmail.com', 200, 0, '2025-10-08 22:58:05', 1, 2, 1, 1),
+(9, 'daniel1', '$2y$05$7jYnXBc3GnazRSpgiYOdf.zYmYYHvWKufWN375FRklsm02t03lyX6', 'daniel@gmail.com', 200, 0, '2025-10-18 01:02:05', NULL, 2, 1, 2);
 
 --
 -- Índices para tablas volcadas
@@ -294,6 +299,7 @@ ALTER TABLE `avatar`
 --
 ALTER TABLE `detalle_usuario_partida`
   ADD PRIMARY KEY (`id_usuario_partida`),
+  ADD UNIQUE KEY `uniq_jugador_partida` (`id_usuario1`,`id_usuario2`,`id_partida`),
   ADD KEY `id_usuario` (`id_usuario1`),
   ADD KEY `id_usuario2` (`id_usuario2`),
   ADD KEY `id_partida` (`id_partida`),
@@ -323,7 +329,8 @@ ALTER TABLE `nivel`
 ALTER TABLE `partida`
   ADD PRIMARY KEY (`id_partida`),
   ADD KEY `id_sala` (`id_sala`),
-  ADD KEY `id_estado_part` (`id_estado_part`);
+  ADD KEY `id_estado_part` (`id_estado_part`),
+  ADD KEY `id_ganador` (`id_ganador`);
 
 --
 -- Indices de la tabla `rol`
@@ -400,7 +407,7 @@ ALTER TABLE `nivel`
 -- AUTO_INCREMENT de la tabla `partida`
 --
 ALTER TABLE `partida`
-  MODIFY `id_partida` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_partida` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `rol`
@@ -412,7 +419,7 @@ ALTER TABLE `rol`
 -- AUTO_INCREMENT de la tabla `sala`
 --
 ALTER TABLE `sala`
-  MODIFY `id_sala` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_sala` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de la tabla `tipo_arma`
@@ -424,7 +431,7 @@ ALTER TABLE `tipo_arma`
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- Restricciones para tablas volcadas
@@ -451,7 +458,8 @@ ALTER TABLE `detalle_usuario_partida`
 --
 ALTER TABLE `partida`
   ADD CONSTRAINT `partida_ibfk_1` FOREIGN KEY (`id_sala`) REFERENCES `sala` (`id_sala`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `partida_ibfk_2` FOREIGN KEY (`id_estado_part`) REFERENCES `estado` (`id_estado`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `partida_ibfk_2` FOREIGN KEY (`id_estado_part`) REFERENCES `estado` (`id_estado`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `partida_ibfk_3` FOREIGN KEY (`id_ganador`) REFERENCES `usuario` (`id_usuario`);
 
 --
 -- Filtros para la tabla `sala`
