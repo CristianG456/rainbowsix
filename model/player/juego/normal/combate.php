@@ -12,6 +12,12 @@ $id_usuario = $_SESSION['id_usuario'];
 $id_sala = $_GET['id_sala'] ?? 0;
 if (!$id_sala) die("Sala no válida");
 
+// Obtener el nivel del usuario para el bloqueo de armas (si no existe, asumir nivel 1)
+$sqlNivelUsu = $con->prepare("SELECT id_nivel FROM usuario WHERE id_usuario=? LIMIT 1");
+$sqlNivelUsu->execute([$id_usuario]);
+$filaNivel = $sqlNivelUsu->fetch(PDO::FETCH_ASSOC);
+$nivel_usuario = ($filaNivel && $filaNivel['id_nivel']) ? intval($filaNivel['id_nivel']) : 1;
+
 // Buscar partida activa en la sala (estado 1 = ABIERTO)
 $sqlPartida = $con->prepare("SELECT * FROM partida WHERE id_sala=? AND id_estado_part=1 LIMIT 1");
 $sqlPartida->execute([$id_sala]);
@@ -56,16 +62,38 @@ if (!empty($jugadoresEnPartida)) {
     $upd->execute($jugadoresEnPartida);
 }
 
-// Obtener jugadores de la partida (para renderizar la página)
+// Limpiar usuarios inactivos de la partida
+$sqlLimpiar = $con->prepare("
+    DELETE FROM detalle_usuario_partida 
+    WHERE id_partida = ? 
+    AND id_usuario1 IN (
+        SELECT id_usuario 
+        FROM usuario 
+        WHERE id_estado_usu != 1
+    )
+");
+$sqlLimpiar->execute([$id_partida]);
+
+// Obtener jugadores activos de la partida (para renderizar la página)
 $sqlJugadores = $con->prepare("
 SELECT u.id_usuario,u.nomb_usu,u.vida,u.puntos,a.url_personaje
 FROM usuario u
 INNER JOIN avatar a ON u.id_avatar=a.id_avatar
 INNER JOIN detalle_usuario_partida d ON u.id_usuario=d.id_usuario1 OR u.id_usuario=d.id_usuario2
-WHERE d.id_partida=?
+WHERE d.id_partida=? AND u.id_estado_usu = 1
 ");
 $sqlJugadores->execute([$id_partida]);
 $jugadores = $sqlJugadores->fetchAll(PDO::FETCH_ASSOC);
+
+// Si no hay jugadores activos, cerrar la partida
+if (empty($jugadores)) {
+    $sqlCerrarPartida = $con->prepare("UPDATE partida SET id_estado_part = 4 WHERE id_partida = ?");
+    $sqlCerrarPartida->execute([$id_partida]);
+    
+    // Redirigir al lobby
+    header("Location: ingreso_sala.php");
+    exit;
+}
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -120,10 +148,17 @@ $jugadores = $sqlJugadores->fetchAll(PDO::FETCH_ASSOC);
             <label>Arma:</label>
             <select name="id_arma" required>
                 <?php
-                $armas = $con->prepare("SELECT id_arma,nomb_arma FROM armas");
+                // Obtener nivel requerido de cada arma (columna id_nivel_arma en la tabla `armas`)
+                $armas = $con->prepare("SELECT id_arma, nomb_arma, id_nivel_arma FROM armas");
                 $armas->execute();
                 foreach ($armas->fetchAll() as $arma) {
-                    echo "<option value='{$arma['id_arma']}'>".htmlspecialchars($arma['nomb_arma'])."</option>";
+                    $reqNivel = isset($arma['id_nivel_arma']) ? intval($arma['id_nivel_arma']) : 1;
+                    $disabled = ($reqNivel > $nivel_usuario) ? 'disabled' : '';
+                    $label = htmlspecialchars($arma['nomb_arma']);
+                    if ($reqNivel > 1) {
+                        $label .= " (Req. nivel: $reqNivel)";
+                    }
+                    echo "<option value='" . $arma['id_arma'] . "' data-nivel='" . $reqNivel . "' $disabled>" . $label . "</option>";
                 }
                 ?>
             </select>
@@ -146,6 +181,7 @@ $jugadores = $sqlJugadores->fetchAll(PDO::FETCH_ASSOC);
 const id_usuario = <?= $id_usuario ?>;
 const id_sala = <?= $id_sala ?>; 
 let id_partida = <?= $id_partida ?>;
+const userNivel = <?= $nivel_usuario ?>; // nivel del usuario actual (para validación cliente)
 let partidaIniciada = false;
 let cuentaRegresivaInterval = null;
 let timerPartidaInterval = null;
@@ -172,7 +208,7 @@ function verificarInicioPartida() {
 
         id_partida = data.id_partida; // actualizar por si se creó nueva
         const estado = data.estado_partida;
-        const tiempo_restante = Math.min(data.tiempo_restante || 60, 60);
+        const tiempo_restante = Math.min(data.tiempo_restante || 30, 30);
 
         if (estado === 3) { // Abierto
             // SOLO mostrar en el timer, no en el log
@@ -211,6 +247,16 @@ function iniciarCuentaRegresiva(segundos) {
         }
     }, 1000);
 }
+
+// Función para actualizar la actividad del usuario
+function actualizarActividadUsuario() {
+    fetch('/rainbowsix/controller/actualizar_actividad.php', {
+        method: 'POST'
+    }).catch(error => console.error('Error al actualizar actividad:', error));
+}
+
+// Actualizar actividad cada 30 segundos
+setInterval(actualizarActividadUsuario, 30000);
 
 // Timer global de la partida (5 minutos)
 function iniciarTimerPartida(segundos) {
@@ -288,13 +334,22 @@ $("#ataqueForm").submit(function(e) {
     const $btn = $form.find("button[type='submit']");
     $btn.prop("disabled", true);
 
+    // Validación adicional en cliente: asegurar que el arma seleccionada no supere el nivel del usuario
+    const armaSel = $form.find("select[name='id_arma'] option:selected");
+    const armaReqNivel = parseInt(armaSel.data('nivel') || 1, 10);
+    if (armaReqNivel > userNivel) {
+        alert(`No puedes usar esa arma. Requiere nivel ${armaReqNivel}. Tu nivel: ${userNivel}`);
+        $btn.prop("disabled", false);
+        return;
+    }
+
     $.ajax({
         url: "actualizar_combate.php",
         type: "POST",
         data: $form.serialize(),
         dataType: "json", // esperamos un JSON con { msg: "..." } o { error: "..." }
         success: function(response) {
-            console.log("Respuesta del servidor:", response); // 👀 para depurar
+            console.log("Respuesta del servidor:", response); //  para depurar
 
             if (response.error) {
                 alert(response.error);

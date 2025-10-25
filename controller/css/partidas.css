@@ -26,11 +26,12 @@ body {
 }
 
 .page-title-armamento {
-    font-size: 4rem;
-    margin: 0;
+    font-size: clamp(2rem, 5vw, 4rem);
+    margin: 0 0 1rem;
     text-transform: uppercase;
     letter-spacing: 2px;
     color: #ffd700;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
     z-index: 2;
 }
 
@@ -53,19 +54,22 @@ body {
 /* Encabezado de la tabla */
 .table-header {
     display: grid;
-    grid-template-columns: repeat(7, 1fr);
+    grid-template-columns: repeat(9, 1fr);
     background-color: #750808;
     color: #fff;
     text-align: center;
     font-weight: bold;
     padding: 15px 0;
     border-bottom: 3px solid #d30000;
+    position: sticky;
+    top: 0;
+    z-index: 1;
 }
 
 /* Filas de la tabla */
 .table-row {
     display: grid;
-    grid-template-columns: repeat(7, 1fr);
+    grid-template-columns: repeat(9, 1fr);
     text-align: center;
     padding: 15px 0;
     border-bottom: 1px solid rgba(255, 255, 255, 0.15);

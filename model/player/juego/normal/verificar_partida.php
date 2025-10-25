@@ -16,11 +16,11 @@ $tiempo = $con->prepare("SELECT TIMESTAMPDIFF(MINUTE, inicio, NOW()) AS minutos 
 $tiempo->execute([$id_partida]);
 $min = $tiempo->fetchColumn();
 
-// Contar jugadores vivos
+// Contar jugadores vivos y activos
 $vivos = $con->prepare("
     SELECT COUNT(*) FROM usuario u
     INNER JOIN detalle_usuario_partida d ON u.id_usuario = d.id_usuario1 OR u.id_usuario = d.id_usuario2
-    WHERE d.id_partida = ? AND u.vida > 0
+    WHERE d.id_partida = ? AND u.vida > 0 AND u.id_estado_usu = 1
 ");
 $vivos->execute([$id_partida]);
 $num_vivos = $vivos->fetchColumn();

@@ -35,7 +35,20 @@ try {
 
     //  Cerrar partida si no quedan jugadores
     if ($cantidad == 0) {
-        $con->prepare("UPDATE partida SET id_estado_part=4 WHERE id_partida=?")->execute([$id_partida]);
+        // Marcar partida como cerrada, registrar fecha_fin y cantidad_jug a 0
+        $con->prepare("UPDATE partida SET id_estado_part=4, fecha_fin=NOW(), cantidad_jug=0 WHERE id_partida=?")->execute([$id_partida]);
+
+        // Obtener la sala asociada y marcarla como disponible (ABIERTO = 3)
+        $s = $con->prepare("SELECT id_sala FROM partida WHERE id_partida=? LIMIT 1");
+        $s->execute([$id_partida]);
+        $rs = $s->fetch(PDO::FETCH_ASSOC);
+        if ($rs && isset($rs['id_sala'])) {
+            // Sólo abrir la sala si pertenece a las primeras 3 salas disponibles
+            $updSala = $con->prepare(
+                "UPDATE sala SET id_estado_sala=3 WHERE id_sala = ? AND id_sala IN (SELECT id_sala FROM (SELECT id_sala FROM sala ORDER BY id_sala ASC LIMIT 3) AS t)"
+            );
+            $updSala->execute([$rs['id_sala']]);
+        }
     }
 
     $con->commit();

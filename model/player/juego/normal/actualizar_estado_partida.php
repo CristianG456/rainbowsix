@@ -54,10 +54,10 @@ if ($jugadores >= 2 && $partida['id_estado_part'] == 3) {
     $partida = $sqlPartida->fetch(PDO::FETCH_ASSOC);
 }
 
-// Calcular tiempo restante (60s desde inicio)
+// Calcular tiempo restante (30s desde inicio)
 $inicio = strtotime($partida['inicio_cuenta_regresiva'] ?? date('Y-m-d H:i:s'));
 $ahora = time();
-$tiempo_restante = max(0, 60 - ($ahora - $inicio));
+$tiempo_restante = max(0, 30 - ($ahora - $inicio));
 
 echo json_encode([
     'estado_partida' => (int)$partida['id_estado_part'],

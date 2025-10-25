@@ -96,6 +96,35 @@ if(count($vivos) === 1){
     $ganador_nombre = $stmt_ganador->fetchColumn();
 
     $partida_finalizada = true;
+
+    // --- Limpieza: cerrar partida, dejar sala disponible y eliminar jugadores de detalle para dejar la sala vacía ---
+    try {
+        // Obtener id_sala antes de cerrar
+        $stmtSala = $con->prepare("SELECT id_sala FROM partida WHERE id_partida=? LIMIT 1");
+        $stmtSala->execute([$id_partida]);
+        $rowSala = $stmtSala->fetch(PDO::FETCH_ASSOC);
+        $id_sala_part = $rowSala ? intval($rowSala['id_sala']) : null;
+
+        // Marcar partida como finalizada/cerrada y registrar fecha_fin
+        $upd_close = $con->prepare("UPDATE partida SET id_estado_part=4, fecha_fin=NOW(), cantidad_jug=0 WHERE id_partida=?");
+        $upd_close->execute([$id_partida]);
+
+        // Si conocemos la sala, marcarla como ABIERTO (3) para que esté disponible
+        if ($id_sala_part) {
+            // Sólo marcar la sala como ABIERTO si está dentro de las primeras 3 salas
+            $updSala = $con->prepare(
+                "UPDATE sala SET id_estado_sala=3 WHERE id_sala = ? AND id_sala IN (SELECT id_sala FROM (SELECT id_sala FROM sala ORDER BY id_sala ASC LIMIT 3) AS t)"
+            );
+            $updSala->execute([$id_sala_part]);
+        }
+
+        // Eliminar registros de detalle para que la sala quede vacía
+        $del = $con->prepare("DELETE FROM detalle_usuario_partida WHERE id_partida=?");
+        $del->execute([$id_partida]);
+
+    } catch (Exception $e) {
+        // No interrumpimos el flujo principal por la limpieza, pero registramos error (si hubiera logging lo ideal)
+    }
 }
 
 // Respuesta JSON

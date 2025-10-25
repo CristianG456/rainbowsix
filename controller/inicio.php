@@ -37,11 +37,15 @@ if (isset($_POST["iniciar"])) {
         exit();
     }
 
-    // Guardar sesión
+    // Guardar sesión y marcar usuario como activo
     $_SESSION['id_usuario'] = $fila['id_usuario'];
     $_SESSION['usuario'] = $fila['nomb_usu'];
     $_SESSION['rol'] = (int)$fila['id_rol'];
     $_SESSION['estado'] = (int)$fila['id_estado_usu'];
+    
+    // Marcar al usuario como activo
+    $stmt = $con->prepare("UPDATE usuario SET id_estado_usu = 1 WHERE id_usuario = ?");
+    $stmt->execute([$fila['id_usuario']]);
 
     // Bloquear si el usuario está inactivo/bloqueado
     if ($_SESSION['rol'] == 2 && $_SESSION['estado'] == 2) {
