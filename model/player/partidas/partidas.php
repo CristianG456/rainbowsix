@@ -141,7 +141,7 @@ $resultado = $sql->fetchAll(PDO::FETCH_ASSOC);
             echo "<div>#" . htmlspecialchars($fila_partida['id_partida']) . "</div>";
             echo "<div>" . $fecha_inicio->format('d/m/Y H:i') . "</div>";
             echo "<div>" . ($fecha_fin ? $fecha_fin->format('d/m/Y H:i') : '-') . "</div>";
-            echo "<div>" . htmlspecialchars($fila_partida['cantidad_jug']) . 
+            echo "<div>" . htmlspecialchars($fila_partida['cantidad_jug']) . "/5" . 
                  " (" . $fila_partida['jugadores_eliminados'] . " eliminados)</div>";
             echo "<div class='puntos'>" . htmlspecialchars($fila_partida['mis_puntos']) . "</div>";
             echo "<div class='estado-" . strtolower($estado) . "'>" . $estado . "</div>";

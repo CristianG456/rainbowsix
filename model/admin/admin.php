@@ -50,10 +50,18 @@ if (isset($_POST['cerrar'])) {
         <h1>BIENVENIDO AMINISTRADOR</h1>
     </div>
 
-<div class="usuarios-bloque">
-    <div class="usuarios-text">ACTUALIZACIÓN DE JUGADORES</div>
-    <a href="usuarios.php"><img src="../../controller/img/usuario.jpg" alt="Usuarios" class="usuarios-img"></a>
+<div class="bloques-container">
+    <div class="usuarios-bloque">
+        <div class="usuarios-text">ACTUALIZACIÓN DE JUGADORES</div>
+        <a href="usuarios.php"><img src="../../controller/img/usuario.jpg" alt="Usuarios" class="usuarios-img"></a>
+    </div>
+
+    <div class="usuarios-bloque">
+        <div class="usuarios-text">HISTORIAL DE PARTIDAS</div>
+        <a href="historial.php"><img src="../../controller/img/usuario.jpg" alt="Usuarios" class="usuarios-img"></a>
+    </div>
 </div>
+
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
