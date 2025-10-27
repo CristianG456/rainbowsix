@@ -162,54 +162,51 @@ progress {
     transform: scale(.98);
 }
 
+/* ========== CONTENEDOR DEL JUEGO ========== */
 .juego-container {
     position: relative;
     width: 100%;
+    height: 100%;
+    overflow: hidden;
     max-width: 1200px;
-    height: 520px;
     margin: 0 auto;
-    overflow: visible;
-    pointer-events: none;
 }
 
 .mifig-container {
     position: absolute;
-    left: 18px;
-    bottom: 100px;
-    width: 220px;
-    /* ancho fijo para todos */
-    height: 420px;
-    /* altura fija estándar */
+    bottom: 80px; /* 🔼 sube ligeramente el personaje */
+    left: 70px;   /* posición lateral */
+    width: 360px; /* 🔼 tamaño más grande */
+    height: 480px; /* 🔼 aumenta la altura del contenedor */
+    z-index: 5;
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-end;
-    z-index: 3;
+    align-items: flex-end; /* los alinea al suelo */
+    justify-content: center;
+    overflow: hidden;
     pointer-events: auto;
 }
 
-.personaje {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    object-position: bottom;
-    image-rendering: auto;
-    filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.6));
-    animation: idleFloat 3s ease-in-out infinite;
-    user-select: none;
-}
-
+.personaje,
 .personaje1 {
-    width: 370px;
-    height: 370px;
+    height: 105%; /* 🔼 un poquito más grande dentro del contenedor */
+    width: auto;
     object-fit: contain;
     object-position: bottom;
+    display: block;
     image-rendering: auto;
-    filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.6));
+    filter: drop-shadow(0 0 18px rgba(255, 215, 0, 0.6)); /* leve brillo */
     animation: idleFloat 3s ease-in-out infinite;
     user-select: none;
+    z-index: 5;
 }
 
+
+/* Ocultar completamente el logo */
+.logo {
+    display: none !important;
+}
+
+/* ========== TEXTO Y OTROS ========== */
 a {
     text-decoration: none;
     color: rgb(255, 255, 255);
@@ -268,39 +265,26 @@ a {
     font-size: 1rem;
 }
 
-
-
-
 @keyframes idleFloat {
-
-    0%,
-    100% {
-        transform: translateY(0);
-    }
-
-    50% {
-        transform: translateY(-4px);
-    }
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
 }
 
+/* ========== RESPONSIVE ========== */
 @media (max-width: 900px) {
     .juego-container {
         height: 420px;
     }
 
     .mifig-container {
-        left: 12px;
-        bottom: 28px;
-        width: 180px;
+        left: 40px;
+        height: 220px;
+        width: 200px;
     }
 
-    .personaje {
-        width: 120px;
-    }
-
-    .plataforma {
-        width: 160px;
-        height: 10px;
+    .personaje,
+    .personaje1 {
+        height: 100%;
     }
 }
 
@@ -317,17 +301,13 @@ a {
     }
 
     .mifig-container {
-        left: 8px;
-        bottom: 20px;
-        width: 140px;
+        left: 20px;
+        height: 180px;
+        width: 160px;
     }
 
-    .personaje {
-        width: 100px;
-    }
-
-    .plataforma {
-        width: 120px;
-        height: 8px;
+    .personaje,
+    .personaje1 {
+        height: 100%;
     }
 }

@@ -67,73 +67,78 @@ if (isset($_POST['cerrar'])) {
     <title>RainbowSix</title>
     <link rel="stylesheet" href="../../controller/css/lobby.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&display=swap" rel="stylesheet">
+
+
+
 </head>
+
 <body>
+    <video autoplay muted loop playsinline class="video-fondo">
+        <source src="../../controller/img/animacion2.mp4" type="video/mp4">
+    </video>
 
-<video autoplay muted loop playsinline class="video-fondo">
-    <source src="../../controller/img/animacion2.mp4" type="video/mp4">
-</video>
+    <div class="contenedor">
+        <h1>Rainbow Six</h1>
 
-<div class="contenedor">
-    <h1>Rainbow Six</h1>
-
-    <div class="menu">
-        <a href="juego/juego.php">Jugar</a>
-        <a href="agentes/agentes.php">Agentes</a>
-        <a href="armas/armas.php">Armas</a>
-        <a href="partidas/partidas.php">Partidas Jugadas</a>
-    </div>
-
-    <div class="puntos">
-        <div class="usuario-info">
-            <span class="nombre-usuario"><?php echo htmlspecialchars($fila['nomb_usu']); ?></span>
-
-            <?php if ($avatar && !empty($avatar['url_avatar'])): ?>
-                <img src="../../controller/img/<?php echo htmlspecialchars($avatar['url_avatar']); ?>"
-                     alt="Avatar del usuario" class="avatar-usuario">
-            <?php else: ?>
-                <img src="../../controller/img/default.webp"
-                     alt="Avatar por defecto" class="avatar-usuario">
-            <?php endif; ?>
-
-            <span class="nivel">Nivel: <?php echo $nivelId; ?></span>
-
-            <?php if ($urlIcono): ?>
-                <img src="../../controller/img/<?php echo htmlspecialchars($nivel['url_nivel']); ?>"
-                     class="icono-rango" alt="Icono de nivel">
-            <?php endif; ?>
+        <div class="menu">
+            <a href="juego/juego.php">Jugar</a>
+            <a href="agentes/agentes.php">Agentes</a>
+            <a href="armas/armas.php">Armas</a>
+            <a href="partidas/partidas.php">Partidas Jugadas</a>
         </div>
 
-        <div class="usuario-progress">
-            <label>
-                Rango: <?php echo htmlspecialchars($nombreNivel); ?><br>
-                Puntos: <?php echo $puntosDentroNivel . " / " . $puntosMaximosNivel; ?>
-            </label>
-            <br>
-            <div class="progress-bar">
-                <div class="progress-fill" style="width: <?php echo $porcentaje; ?>%;"></div>
+        <div class="puntos">
+            <div class="usuario-info">
+                <span class="nombre-usuario"><?php echo htmlspecialchars($fila['nomb_usu']); ?></span>
+
+                <?php if ($avatar && !empty($avatar['url_avatar'])): ?>
+                    <img src="../../controller/img/<?php echo htmlspecialchars($avatar['url_avatar']); ?>"
+                         alt="Avatar del usuario" class="avatar-usuario">
+                <?php else: ?>
+                    <img src="../../controller/img/default.webp"
+                         alt="Avatar por defecto" class="avatar-usuario">
+                <?php endif; ?>
+
+                <span class="nivel">Nivel: <?php echo $nivelId; ?></span>
+
+                <?php if ($urlIcono): ?>
+                    <img src="../../controller/img/<?php echo htmlspecialchars($nivel['url_nivel']); ?>"
+                         class="icono-rango" alt="Icono de nivel">
+                <?php endif; ?>
             </div>
-            <br>
-            <form method="POST">
-                <input type="submit" value="Cerrar Sesión" name="cerrar" class="cerrar-sesion-btn">
-            </form>
+
+            <div class="usuario-progress">
+                <label>
+                    Rango: <?php echo htmlspecialchars($nombreNivel); ?><br>
+                    Puntos: <?php echo $puntosDentroNivel . " / " . $puntosMaximosNivel; ?>
+                </label>
+                <br>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: <?php echo $porcentaje; ?>%;"></div>
+                </div>
+                <br>
+                <form method="POST">
+                    <input type="submit" value="Cerrar Sesión" name="cerrar" class="cerrar-sesion-btn">
+                </form>
+            </div>
+        </div>
+
+        <div class="juego-container">
+            <div class="mifig-container">
+                <?php if ($avatar && !empty($avatar['url_personaje'])): ?>
+                    <img src="../../controller/img/<?php echo htmlspecialchars($avatar['url_personaje']); ?>"
+                         alt="Personaje Seleccionado" class="personaje">
+                <?php else: ?>
+                    <a href="../player/agentes/agentes.php" class="enlace-personaje">
+                        <img src="../../controller/img/default.webp" alt="Selecciona un personaje" class="personaje1">
+                        Selecciona tu personaje
+                    </a>
+                <?php endif; ?>
+            </div>
+
+            <!-- ✅ Aquí se inserta el logo -->
+            <img src="../../controller/img/logo.png" alt="Logo del juego" class="logo">
         </div>
     </div>
-
-    <div class="juego-container">
-        <div class="mifig-container">
-            <?php if ($avatar && !empty($avatar['url_personaje'])): ?>
-                <img src="../../controller/img/<?php echo htmlspecialchars($avatar['url_personaje']); ?>"
-                     alt="Personaje Seleccionado" class="personaje">
-            <?php else: ?>
-                <a href="../player/agentes/agentes.php" class="enlace-personaje">
-                    <img src="../../controller/img/default.webp" alt="Selecciona un personaje" class="personaje1">
-                    Selecciona tu personaje
-                </a>
-            <?php endif; ?>
-        </div>
-    </div>
-</div>
-
 </body>
 </html>

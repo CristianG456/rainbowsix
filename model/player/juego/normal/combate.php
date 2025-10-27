@@ -8,8 +8,8 @@ if (!isset($_SESSION['id_usuario'])) {
     exit("No hay sesión activa");
 }
 
-$id_usuario = $_SESSION['id_usuario'];
-$id_sala = $_GET['id_sala'] ?? 0;
+$id_usuario = (int)$_SESSION['id_usuario'];
+$id_sala = (int)($_GET['id_sala'] ?? 0);
 if (!$id_sala) die("Sala no válida");
 
 // Obtener el nivel del usuario para el bloqueo de armas (si no existe, asumir nivel 1)
@@ -62,7 +62,7 @@ if (!empty($jugadoresEnPartida)) {
     $upd->execute($jugadoresEnPartida);
 }
 
-// Limpiar usuarios inactivos de la partida
+// Limpiar usuarios inactivos de la partida (opcional)
 $sqlLimpiar = $con->prepare("
     DELETE FROM detalle_usuario_partida 
     WHERE id_partida = ? 
@@ -78,41 +78,73 @@ $sqlLimpiar->execute([$id_partida]);
 $sqlJugadores = $con->prepare("
 SELECT u.id_usuario,u.nomb_usu,u.vida,u.puntos,a.url_personaje
 FROM usuario u
-INNER JOIN avatar a ON u.id_avatar=a.id_avatar
+LEFT JOIN avatar a ON u.id_avatar=a.id_avatar
 INNER JOIN detalle_usuario_partida d ON u.id_usuario=d.id_usuario1 OR u.id_usuario=d.id_usuario2
 WHERE d.id_partida=? AND u.id_estado_usu = 1
 ");
 $sqlJugadores->execute([$id_partida]);
 $jugadores = $sqlJugadores->fetchAll(PDO::FETCH_ASSOC);
 
+// 🔹 Si solo hay un jugador real en la partida, preparamos un enemigo local temporal
+$has_local_enemy = false;
+$localEnemy = null;
+if (count($jugadores) === 1) {
+    // Intentar obtener un avatar aleatorio de la base (de un usuario activo), para que el enemigo local tenga imagen real
+    $sqlAvatar = $con->prepare("
+        SELECT a.url_personaje 
+        FROM avatar a
+        JOIN usuario u ON u.id_avatar = a.id_avatar
+        WHERE u.id_estado_usu = 1
+        ORDER BY RAND()
+        LIMIT 1
+    ");
+    $sqlAvatar->execute();
+    $avatarRow = $sqlAvatar->fetch(PDO::FETCH_ASSOC);
+
+    $img = ($avatarRow && !empty($avatarRow['url_personaje'])) ? $avatarRow['url_personaje'] : 'enemigo_default.png';
+    // Asegúrate de tener /controller/img/enemigo_default.png como fallback
+
+    $localEnemy = [
+        'id_usuario' => 9999, // id especial local
+        'nomb_usu' => 'Enemigo Local',
+        'vida' => 200,
+        'puntos' => 0,
+        'url_personaje' => $img
+    ];
+    $jugadores[] = $localEnemy;
+    $has_local_enemy = true;
+}
+
 // Si no hay jugadores activos, cerrar la partida
 if (empty($jugadores)) {
     $sqlCerrarPartida = $con->prepare("UPDATE partida SET id_estado_part = 4 WHERE id_partida = ?");
     $sqlCerrarPartida->execute([$id_partida]);
-    
-    // Redirigir al lobby
     header("Location: ingreso_sala.php");
     exit;
 }
+
+// Obtener todas las armas con daños y nivel requerido (para incluir en el select con data-*)
+$sqlArm = $con->prepare("SELECT id_arma, nomb_arma, dano_cabeza, dano_torso, id_nivel_arma FROM armas");
+$sqlArm->execute();
+$armasTodas = $sqlArm->fetchAll(PDO::FETCH_ASSOC);
+
 ?>
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
     <title>Combate</title>
     <link rel="stylesheet" href="../../../../controller/css/combate.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&display=swap" rel="stylesheet">
-
+    <style>
+      /* pequeño ajuste para el log */
+      #log { max-height: 200px; overflow:auto; color: #fff; margin-top:12px; }
+    </style>
 </head>
-
 <body>
     <h2>Partida #<?= htmlspecialchars($id_partida) ?></h2>
 
-    <!-- Timer global de 5 minutos (se mostrará cuando la partida esté EN_JUEGO) -->
-
-    <!-- Timer de cuenta regresiva antes del inicio (60s) -->
 <div id="timerContainer" style="text-align:center; margin-bottom: 10px;">
   <h2 id="timer" style="font-size:24px; color:#ffcc00; font-weight:bold; display:block;">Esperando jugadores...</h2>
   <h3 id="timerGlobal" style="font-size:20px; color:#00ffea; font-weight:bold;"></h3>
@@ -121,14 +153,15 @@ if (empty($jugadores)) {
     <div class="jugadores" id="jugadores">
         <?php foreach ($jugadores as $j):
             $esMiJugador = $j['id_usuario'] == $id_usuario;
-            $vidaPorcentaje = max(0, min(100, ($j['vida'] / 200) * 100));
+            $vidaPorcentaje = max(0, min(100, (intval($j['vida']) / 200) * 100));
+            $imgPath = htmlspecialchars(basename($j['url_personaje']));
         ?>
-            <div class="jugador <?= $j['vida'] <= 0 ? 'eliminado' : '' ?> <?= $esMiJugador ? 'mi-jugador' : '' ?>"
-                 data-id="<?= $j['id_usuario'] ?>" data-vida="<?= $vidaPorcentaje ?>">
+            <div class="jugador <?= intval($j['vida']) <= 0 ? 'eliminado' : '' ?> <?= $esMiJugador ? 'mi-jugador' : '' ?>"
+                 data-id="<?= htmlspecialchars($j['id_usuario']) ?>" data-vida="<?= $vidaPorcentaje ?>">
                 <div class="vida-barra"><div class="vida-fill" style="width:<?= $vidaPorcentaje ?>%"></div></div>
-                <img src="/rainbowsix/controller/img/<?= basename($j['url_personaje']) ?>" class="avatar">
+                <img src="/rainbowsix/controller/img/<?= $imgPath ?>" class="avatar" onerror="this.src='/rainbowsix/controller/img/enemigo_default.png'">
                 <h3><?= htmlspecialchars($j['nomb_usu']) ?> <?= $esMiJugador ? '<span>(Tú)</span>' : '' ?></h3>
-                <p>Puntos: <?= $j['puntos'] ?></p>
+                <p class="puntos">Puntos: <?= htmlspecialchars($j['puntos']) ?></p>
             </div>
         <?php endforeach; ?>
     </div>
@@ -140,25 +173,23 @@ if (empty($jugadores)) {
             <select name="id_enemigo" required>
                 <option value="">--Selecciona--</option>
                 <?php foreach ($jugadores as $j):
-                    if ($j['id_usuario'] != $id_usuario && $j['vida'] > 0): ?>
-                        <option value="<?= $j['id_usuario'] ?>"><?= htmlspecialchars($j['nomb_usu']) ?></option>
+                    if ($j['id_usuario'] != $id_usuario && intval($j['vida']) > 0): ?>
+                        <option value="<?= htmlspecialchars($j['id_usuario']) ?>"><?= htmlspecialchars($j['nomb_usu']) ?></option>
                 <?php endif; endforeach; ?>
             </select>
 
             <label>Arma:</label>
             <select name="id_arma" required>
                 <?php
-                // Obtener nivel requerido de cada arma (columna id_nivel_arma en la tabla `armas`)
-                $armas = $con->prepare("SELECT id_arma, nomb_arma, id_nivel_arma FROM armas");
-                $armas->execute();
-                foreach ($armas->fetchAll() as $arma) {
+                foreach ($armasTodas as $arma) {
                     $reqNivel = isset($arma['id_nivel_arma']) ? intval($arma['id_nivel_arma']) : 1;
                     $disabled = ($reqNivel > $nivel_usuario) ? 'disabled' : '';
                     $label = htmlspecialchars($arma['nomb_arma']);
-                    if ($reqNivel > 1) {
-                        $label .= " (Req. nivel: $reqNivel)";
-                    }
-                    echo "<option value='" . $arma['id_arma'] . "' data-nivel='" . $reqNivel . "' $disabled>" . $label . "</option>";
+                    if ($reqNivel > 1) $label .= " (Req. nivel: $reqNivel)";
+                    // incluimos datos de daño en data-*
+                    $dCabeza = intval($arma['dano_cabeza']);
+                    $dTorso = intval($arma['dano_torso']);
+                    echo "<option value='{$arma['id_arma']}' data-nivel='{$reqNivel}' data-dano-cabeza='{$dCabeza}' data-dano-torso='{$dTorso}' $disabled>" . $label . "</option>";
                 }
                 ?>
             </select>
@@ -178,21 +209,21 @@ if (empty($jugadores)) {
     <div id="log"></div>
 
 <script>
-const id_usuario = <?= $id_usuario ?>;
-const id_sala = <?= $id_sala ?>; 
-let id_partida = <?= $id_partida ?>;
-const userNivel = <?= $nivel_usuario ?>; // nivel del usuario actual (para validación cliente)
+const id_usuario = <?= json_encode($id_usuario) ?>;
+const id_sala = <?= json_encode($id_sala) ?>;
+let id_partida = <?= json_encode($id_partida) ?>;
+const userNivel = <?= json_encode($nivel_usuario) ?>;
 let partidaIniciada = false;
 let cuentaRegresivaInterval = null;
 let timerPartidaInterval = null;
 const rutaImgBase = "/rainbowsix/controller/img";
 
+// Datos del enemigo local (si existe)
+const hasLocalEnemy = <?= $has_local_enemy ? 'true' : 'false' ?>;
+const localEnemyData = <?= $has_local_enemy ? json_encode($localEnemy) : 'null' ?>;
+
 // Mostrar mensaje de timer
 function mostrarMensajeTimer(texto) {
-    const timerDiv = $("#timer");
-    if (timerDiv.length === 0) {
-        $("#timerContainer").prepend('<div id="timer" style="font-size:20px;font-weight:bold;color:#fff;margin-bottom:10px;text-align:center;"></div>');
-    }
     $("#timer").text(texto).show();
 }
 
@@ -201,24 +232,21 @@ function bloquearAcciones(bloquear) {
     $("#ataqueForm button, #ataqueForm select").prop("disabled", bloquear);
 }
 
-// Verificar estado de la partida
+// Verificar estado de la partida (sigue llamando a tu endpoint original)
 function verificarInicioPartida() {
     $.getJSON("actualizar_estado_partida.php", { id_sala }, function(data) {
         if (data.error) return console.error(data.error);
-
-        id_partida = data.id_partida; // actualizar por si se creó nueva
+        id_partida = data.id_partida;
         const estado = data.estado_partida;
         const tiempo_restante = Math.min(data.tiempo_restante || 30, 30);
-
-        if (estado === 3) { // Abierto
-            // SOLO mostrar en el timer, no en el log
+        if (estado === 3) {
             $("#timer").text("⏳ Esperando jugadores...").show();
             bloquearAcciones(true);
-        } else if (estado === 5 && !partidaIniciada) { // En juego
+        } else if (estado === 5 && !partidaIniciada) {
             partidaIniciada = true;
-            bloquearAcciones(true); // bloqueamos hasta que pase la cuenta regresiva
+            bloquearAcciones(true);
             iniciarCuentaRegresiva(tiempo_restante);
-        } else if (estado === 4) { // Cerrado
+        } else if (estado === 4) {
             clearInterval(timerPartidaInterval);
             clearInterval(cuentaRegresivaInterval);
             $("#timer").text("🏁 Partida finalizada").show();
@@ -228,13 +256,11 @@ function verificarInicioPartida() {
     });
 }
 
-// Cuenta regresiva de 60s
+// Cuenta regresiva
 function iniciarCuentaRegresiva(segundos) {
     clearInterval(cuentaRegresivaInterval);
     let restante = segundos;
-
-    bloquearAcciones(true); // bloqueamos al iniciar
-
+    bloquearAcciones(true);
     cuentaRegresivaInterval = setInterval(() => {
         if (restante > 0) {
             $("#timer").text(`⏳ Comienza en: ${restante}s`).show();
@@ -242,27 +268,15 @@ function iniciarCuentaRegresiva(segundos) {
         } else {
             clearInterval(cuentaRegresivaInterval);
             $("#timer").text("🔥 ¡La partida ha comenzado!").show();
-            bloquearAcciones(false); // desbloqueamos los botones
-            iniciarTimerPartida(300); // 5 minutos de partida
+            bloquearAcciones(false);
+            iniciarTimerPartida(300);
         }
     }, 1000);
 }
 
-// Función para actualizar la actividad del usuario
-function actualizarActividadUsuario() {
-    fetch('/rainbowsix/controller/actualizar_actividad.php', {
-        method: 'POST'
-    }).catch(error => console.error('Error al actualizar actividad:', error));
-}
-
-// Actualizar actividad cada 30 segundos
-setInterval(actualizarActividadUsuario, 30000);
-
-// Timer global de la partida (5 minutos)
 function iniciarTimerPartida(segundos) {
     clearInterval(timerPartidaInterval);
     let restante = segundos;
-
     timerPartidaInterval = setInterval(() => {
         if (restante <= 0) {
             clearInterval(timerPartidaInterval);
@@ -278,43 +292,67 @@ function iniciarTimerPartida(segundos) {
     }, 1000);
 }
 
-// Actualizar jugadores y select de enemigos
+// Actualizar jugadores: mantiene el enemigo local si está presente
 function actualizarJugadores() {
     if (!id_partida) return;
     const selectEnemigo = $("#ataqueForm select[name='id_enemigo']");
     const seleccionActual = selectEnemigo.val();
 
     $.getJSON("actualizar_jugadores.php", { id_partida }, function(data) {
-        data.forEach(j => {
-            const idStr = j.id_usuario.toString();
-            const vidaPorcentaje = Math.max(0, Math.min(100, (j.vida / 200) * 100));
-            const esMiJugador = j.id_usuario == id_usuario;
+        // data: array de jugadores reales desde el servidor
+        // Reconstruimos la lista visual pero preservando el enemigo local (si aplica)
+        const existingIds = data.map(j=>String(j.id_usuario));
 
+        // Actualizar DOM con datos reales
+        data.forEach(j => {
+            const idStr = String(j.id_usuario);
+            const vidaPorcentaje = Math.max(0, Math.min(100, (j.vida / 200) * 100));
             const jugadorDiv = $("#jugadores .jugador[data-id='" + idStr + "']");
             if (jugadorDiv.length) {
                 jugadorDiv.find(".vida-fill").css("width", vidaPorcentaje + "%");
-                jugadorDiv.find("p").text("Puntos: " + j.puntos);
+                jugadorDiv.find(".puntos").text("Puntos: " + j.puntos);
                 if (j.vida <= 0) jugadorDiv.addClass("eliminado");
             } else {
-                const imgSrc = rutaImgBase + "/" + j.url_personaje;
+                const imgSrc = rutaImgBase + "/" + (j.url_personaje ? j.url_personaje.split('/').pop() : 'enemigo_default.png');
                 $("#jugadores").append(`
                     <div class="jugador" data-id="${idStr}">
                         <div class="vida-barra"><div class="vida-fill" style="width:${vidaPorcentaje}%"></div></div>
-                        <img src="${imgSrc}" class="avatar">
-                        <h3>${j.nomb_usu}${esMiJugador ? ' (Tú)' : ''}</h3>
-                        <p>Puntos: ${j.puntos}</p>
+                        <img src="${imgSrc}" class="avatar" onerror="this.src='${rutaImgBase}/enemigo_default.png'">
+                        <h3>${j.nomb_usu}</h3>
+                        <p class="puntos">Puntos: ${j.puntos}</p>
                     </div>
                 `);
-                if (!esMiJugador && selectEnemigo.find(`option[value="${idStr}"]`).length === 0) {
-                    selectEnemigo.append(`<option value="${idStr}">${j.nomb_usu}</option>`);
-                }
+            }
+            // asegurar que esté en el select de enemigos
+            if (j.id_usuario != id_usuario && selectEnemigo.find(`option[value='${j.id_usuario}']`).length === 0) {
+                selectEnemigo.append(`<option value="${j.id_usuario}">${j.nomb_usu}</option>`);
             }
         });
 
-        // Eliminar jugadores que ya no estén
+        // Si existe enemigo local, volverlo a añadir (porque data no lo trae)
+        if (hasLocalEnemy && localEnemyData) {
+            const idStr = String(localEnemyData.id_usuario);
+            if ($("#jugadores .jugador[data-id='" + idStr + "']").length === 0) {
+                const imgSrc = rutaImgBase + "/" + localEnemyData.url_personaje.split('/').pop();
+                $("#jugadores").append(`
+                    <div class="jugador" data-id="${idStr}">
+                        <div class="vida-barra"><div class="vida-fill" style="width:100%"></div></div>
+                        <img src="${imgSrc}" class="avatar" onerror="this.src='${rutaImgBase}/enemigo_default.png'">
+                        <h3>${localEnemyData.nomb_usu}</h3>
+                        <p class="puntos">Puntos: ${localEnemyData.puntos}</p>
+                    </div>
+                `);
+            }
+            if (selectEnemigo.find(`option[value='${idStr}']`).length === 0) {
+                selectEnemigo.append(`<option value="${idStr}">${localEnemyData.nomb_usu}</option>`);
+            }
+        }
+
+        // Eliminar del DOM jugadores que ya no estén en data (sin tocar al enemigo local)
         $("#jugadores .jugador").each(function() {
-            const id = $(this).data("id").toString();
-            if (!data.some(j => j.id_usuario.toString() === id)) {
+            const id = String($(this).data("id"));
+            if (id === (hasLocalEnemy ? String(localEnemyData.id_usuario) : null)) return; // no remover local
+            if (!existingIds.includes(id)) {
                 $(this).remove();
                 selectEnemigo.find(`option[value='${id}']`).remove();
             }
@@ -323,57 +361,112 @@ function actualizarJugadores() {
         if (selectEnemigo.find(`option[value='${seleccionActual}']`).length > 0) {
             selectEnemigo.val(seleccionActual);
         }
+    }).fail(function(xhr) {
+        console.error("Error al obtener jugadores:", xhr.responseText);
     });
 }
 
-// Enviar ataque (REVISADO: detecta JSON y HTML-error)
-// Enviar ataque y mostrar resultado en el log
+// Enviar ataque
 $("#ataqueForm").submit(function(e) {
     e.preventDefault();
     const $form = $(this);
     const $btn = $form.find("button[type='submit']");
     $btn.prop("disabled", true);
 
-    // Validación adicional en cliente: asegurar que el arma seleccionada no supere el nivel del usuario
+    const id_enemigo = $form.find("select[name='id_enemigo']").val();
+    const id_arma = $form.find("select[name='id_arma']").val();
     const armaSel = $form.find("select[name='id_arma'] option:selected");
     const armaReqNivel = parseInt(armaSel.data('nivel') || 1, 10);
+    const danoCabeza = parseInt(armaSel.data('dano-cabeza') || 0, 10);
+    const danoTorso = parseInt(armaSel.data('dano-torso') || 0, 10);
+    const zona = $form.find("select[name='zona']").val();
+
     if (armaReqNivel > userNivel) {
         alert(`No puedes usar esa arma. Requiere nivel ${armaReqNivel}. Tu nivel: ${userNivel}`);
         $btn.prop("disabled", false);
         return;
     }
 
+    // Si el enemigo seleccionado es el local (id 9999), simulamos en cliente
+    if (String(id_enemigo) === "9999") {
+        const dano = (zona === 'cabeza') ? danoCabeza : danoTorso;
+        // Actualizar DOM del enemigo local
+        const enemyDiv = $("#jugadores .jugador[data-id='9999']");
+        if (!enemyDiv.length) {
+            alert("Enemigo local no encontrado en la interfaz");
+            $btn.prop("disabled", false);
+            return;
+        }
+        // Restar vida visual
+        const vitaFill = enemyDiv.find(".vida-fill");
+        let currentWidth = parseFloat(vitaFill.css("width")) || (100 * vitaFill.parent().width()/vitaFill.parent().width());
+        // mejor calcular en porcentaje a partir del atributo data-vida si existe
+        let percent = parseFloat(enemyDiv.data("vida")) || 100;
+        percent = Math.max(0, percent - (dano / 200 * 100)); // dano relativo
+        enemyDiv.data("vida", percent);
+        vitaFill.css("width", percent + "%");
+        // Mostrar log local
+        $("#log").append(`<div style="color:#fff">Atacaste a <b>${localEnemyData.nomb_usu}</b> con <b>${armaSel.text()}</b> (${zona}) - Daño: ${dano}. Vida restante: ${Math.round((percent/100)*200)}</div>`);
+        // Actualizar puntos del atacante en la UI
+        const attackerDiv = $(`#jugadores .jugador[data-id='${id_usuario}']`);
+        if (attackerDiv.length) {
+            const puntosP = attackerDiv.find(".puntos");
+            const text = puntosP.text();
+            const current = parseInt((text.match(/\d+/)||[0])[0]);
+            const nuevo = current + dano;
+            puntosP.text("Puntos: " + nuevo);
+        }
+        // Si enemigo local queda en 0 vida -> marcar eliminado y reiniciar después
+        if (percent <= 0) {
+            enemyDiv.addClass("eliminado");
+            $("#log").append(`<div style="color:#ff0">Has eliminado al enemigo local. Reiniciando enemigo local...</div>`);
+            setTimeout(() => {
+                // Reiniciar vida y puntos del enemigo local
+                enemyDiv.removeClass("eliminado");
+                enemyDiv.data("vida", 100);
+                enemyDiv.find(".vida-fill").css("width", "100%");
+                enemyDiv.find(".puntos").text("Puntos: 0");
+                $("#log").append(`<div style="color:#0f0">Enemigo local reiniciado.</div>`);
+            }, 2000);
+        }
+        // scroll log
+        $("#log").scrollTop($("#log")[0].scrollHeight);
+        $btn.prop("disabled", false);
+        return;
+    }
+
+    // Si no es local, enviar petición normal al backend
     $.ajax({
         url: "actualizar_combate.php",
         type: "POST",
         data: $form.serialize(),
-        dataType: "json", // esperamos un JSON con { msg: "..." } o { error: "..." }
+        dataType: "json",
         success: function(response) {
-            console.log("Respuesta del servidor:", response); //  para depurar
-
             if (response.error) {
                 alert(response.error);
-            } else if (response.msg) {
-                // Mostramos el mensaje en el log
-                $("#log").append(response.msg);
-                // desplazamos el scroll al final
-                $("#log").scrollTop($("#log")[0].scrollHeight);
             } else {
-                console.warn("Respuesta inesperada:", response);
+                if (response.msg) {
+                    $("#log").append(response.msg);
+                } else {
+                    // si el backend devuelve info estructurada, la mostramos
+                    const at = response.atacante_nombre || '';
+                    const obj = response.objetivo_nombre || '';
+                    const dano = response.dano || '';
+                    const vida = response.vida_restante || '';
+                    $("#log").append(`<div style="color:#fff">${at} golpeó a ${obj} con ${response.arma_nombre || ''} (${response.zona || ''}) → Daño: ${dano}. Vida restante: ${vida}</div>`);
+                }
             }
-
             actualizarJugadores();
             $btn.prop("disabled", false);
+            $("#log").scrollTop($("#log")[0].scrollHeight);
         },
-        error: function(xhr, status, error) {
-            console.error("Error AJAX:", error);
-            console.log("Respuesta del servidor:", xhr.responseText);
+        error: function(xhr, status, err) {
+            console.error("Error AJAX:", xhr.responseText);
             alert("Error al conectar con el servidor.");
             $btn.prop("disabled", false);
         }
     });
 });
-
 
 // Salir de la partida
 $("#salirBtn").click(async function() {
