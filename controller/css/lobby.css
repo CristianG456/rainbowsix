@@ -1,15 +1,4 @@
-.video-fondo {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    width: 100vw;
-    height: 100vh;
-    object-fit: cover;
-    transform: translate(-50%, -50%);
-    z-index: -1;
-    pointer-events: none;
-}
-
+/* ======= VIDEO DE FONDO ======= */
 body {
     background-color: #000;
     color: #fff;
@@ -18,7 +7,31 @@ body {
     font-family: 'Montserrat', sans-serif;
     font-weight: 900;
     overflow: hidden;
+    position: relative;
 }
+
+/* Contenedor del iframe de YouTube */
+.video-fondo {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    z-index: -1;
+}
+
+.video-fondo iframe {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 120vw;
+    height: 120vh;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    border: none;
+}
+
 
 .contenedor {
     display: flex;

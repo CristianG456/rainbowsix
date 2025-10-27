@@ -28,11 +28,19 @@ $nivelUsuario = (int)($fila['id_nivel'] ?? 1);
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&display=swap" rel="stylesheet"> 
 </head>
 <body>
+<div class="video-fondo">
+    <iframe 
+        src="https://www.youtube.com/embed/Ecq736jygkI?autoplay=1&mute=1&loop=1&playlist=Ecq736jygkI&controls=0&modestbranding=1&rel=0&showinfo=0" 
+        frameborder="0" 
+        allow="autoplay; fullscreen; encrypted-media"
+        allowfullscreen>
+    </iframe>
+</div>
 
-    <!-- Fondo de video -->
-    <video autoplay muted loop playsinline class="video-fondo">
-        <source src="../../../controller/img/mundos2.mp4" type="video/mp4">
-    </video>
+
+
+
+
 
     <a href="../player.php" class="btn-volver">Volver</a>
 

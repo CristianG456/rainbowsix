@@ -33,10 +33,16 @@ $resultado = $sql->fetchAll(PDO::FETCH_ASSOC);
 </head>
 <body>
 
-    <!-- Video de fondo -->
-    <video autoplay muted loop playsinline class="video-fondo">
-        <source src="../../../controller/img/armas.mp4" type="video/mp4">
-    </video>
+    <div class="video-fondo">
+            <iframe
+            src="https://www.youtube-nocookie.com/embed/W-xnP-yw_Sc?autoplay=1&mute=1&loop=1&playlist=W-xnP-yw_Sc&controls=0&rel=0&modestbranding=1"
+            allow="autoplay; fullscreen"
+            allowfullscreen>
+            </iframe>
+
+    </div>
+
+
 
     <div class="contenedor">
         <!-- Botón para volver -->

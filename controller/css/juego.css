@@ -1,192 +1,67 @@
-/* ====== Estructura general ====== */
-html, body {
-    height: 100%;
+/* ======= VIDEO DE FONDO ======= */
+body {
+    background-color: #000;
+    color: #fff;
     margin: 0;
     padding: 0;
-}
-
-body {
-    background-color: black;
-    background-size: cover;
-    background-position: center center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    color: #fff;
     font-family: 'Montserrat', sans-serif;
     font-weight: 900;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    overflow: auto;
-}
-
-/* ====== Título principal ====== */
-h1 {
-    color: #ffd700;
-    text-align: center;
-    font-size: 50px;
-    margin: 0;
-    position: fixed;
-    top: 16px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 50;
-    background: rgba(0, 0, 0, 0.15);
-    padding: 8px 16px;
-    border-radius: 8px;
-}
-
-/* ====== Contenedor general ====== */
-body > div {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    max-width: 980px;
-    padding: 80px 24px 24px 24px;
-    box-sizing: border-box;
-}
-/* ====== Contenedor de mundos (horizontal real) ====== */
-.menu-mundos {
-    display: flex;
-    flex-direction: row; /* <-- asegura disposición horizontal */
-    justify-content: center;
-    align-items: flex-start;
-    flex-wrap: nowrap; /* evita salto de línea */
-    gap: 50px;
-    margin: 80px auto 0;
-    padding: 8px;
-    width: 100%;
-    max-width: 1000px;
-    overflow-x: auto; /* si no caben, permite scroll horizontal */
-    scrollbar-width: thin;
-}
-
-.mundo {
+    overflow: hidden;
     position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 10px;
-    padding: 10px;
-    flex: 0 0 auto; /* evita que se estire o encoja */
-    text-align: center;
-    transition: transform 0.25s ease;
 }
 
-/* Imagen */
-.imagen-mundo {
-    width: 380px;
-    height: 220px;
-    object-fit: cover;
-    border-radius: 12px;
-    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.35);
-    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, filter 0.25s ease;
-    border: 4px solid transparent;
+
+/* ======= VIDEO DE FONDO RESPONSIVO ======= */
+.video-fondo {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    z-index: -1;
+    pointer-events: none;
 }
 
-/* Hover */
-.mundo:hover .imagen-mundo:not(.bloqueada) {
-    transform: translateY(-6px) scale(1.04);
-    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.45);
-    border-color: #d10d0de4;
-}
-
-/* Bloqueado */
-.imagen-mundo.bloqueada {
-    filter: brightness(0.35) grayscale(0.85);
-}
-
-.bloqueo-info {
+.video-fondo iframe {
     position: absolute;
-    inset: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background: rgba(0, 0, 0, 0.65);
-    color: #ffd700;
-    font-weight: 900;
-    font-size: 1rem;
-    border-radius: 12px;
-    text-align: center;
-    backdrop-filter: blur(2px);
+    top: 50%;
+    left: 50%;
+    width: 100vw;       /* ocupa todo el ancho de la ventana */
+    height: 100vh;      /* ocupa todo el alto de la ventana */
+    min-width: 100%;
+    min-height: 100%;
+    transform: translate(-50%, -50%);
+    object-fit: cover;   /* asegura que cubra toda el área sin deformar */
+    pointer-events: none;
+    border: none;
 }
 
-.candado {
-    font-size: 1.8rem;
-    margin-bottom: 6px;
-}
-
-/* ====== Responsive (pantallas pequeñas) ====== */
-@media (max-width: 900px) {
-    .menu-mundos {
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 30px;
-        overflow-x: hidden;
-    }
-
-    .imagen-mundo {
-        width: 300px;
-        height: 180px;
-    }
-
-    .bloqueo-info {
-        font-size: 0.9rem;
-    }
-}
-
-
-.mundo:hover {
-    transform: scale(1.03);
-}
-
-/* ====== Imagen del mundo ====== */
-.imagen-mundo {
-    width: 420px;
-    height: 240px;
+/* ====== Para video en <video> local ====== */
+.video-fondo video {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 100vw;
+    height: 100vh;
+    min-width: 100%;
+    min-height: 100%;
     object-fit: cover;
-    border-radius: 12px;
-    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.35);
-    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, filter 0.25s ease;
-    border: 4px solid transparent;
-    box-sizing: border-box;
+    transform: translate(-50%, -50%);
+    z-index: -1;
+    pointer-events: none;
 }
 
-/* Efecto hover (solo si está desbloqueado) */
-.mundo:hover .imagen-mundo:not(.bloqueada) {
-    transform: translateY(-6px) scale(1.04);
-    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.45);
-    border-color: #d10d0de4; /* rojo */
-}
-
-/* ====== Nombre del mundo ====== */
-.mundo h2, .mundo-nombre {
-    color: #fff;
-    font-weight: 800;
-    letter-spacing: 0.6px;
-    margin: 10px 0 0;
-}
-
-/* ====== Efectos generales de enlace ====== */
-.menu-mundos a:hover,
-.menu-mundos a:focus {
-    transform: translateY(-3px);
-}
 
 /* ====== Botón Volver ====== */
 .btn-volver {
     position: fixed;
-    top: 18px;
+    top: 20px;
     left: 30px;
     z-index: 120;
-    background: transparent;
+    background: rgba(0, 0, 0, 0.4);
     color: #fff;
-    padding: 6px 8px;
+    padding: 8px 12px;
     border: none;
     border-radius: 6px;
     text-decoration: none;
@@ -194,43 +69,72 @@ body > div {
     font-size: 1.1rem;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
     cursor: pointer;
-    transition: color 0.15s ease, transform 0.1s ease;
+    transition: color 0.15s ease, transform 0.1s ease, background 0.3s ease;
 }
 
 .btn-volver:hover {
     color: #d30000;
+    background: rgba(0, 0, 0, 0.6);
     transform: translateY(-2px);
 }
 
-@media (max-width: 600px) {
-    .btn-volver {
-        font-size: 1rem;
-        top: 26px;
-        left: 16px;
-    }
-}
-
-/* ====== Fondo de video ====== */
-.video-fondo {
-    position: fixed;
-    top: 50%;
-    left: 50%;
+/* ====== Contenedor principal ====== */
+.menu-mundos {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 80px;
     width: 100vw;
     height: 100vh;
-    object-fit: cover;
-    transform: translate(-50%, -50%);
-    z-index: -1;
-    pointer-events: none;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-align: center;
 }
 
-/* ====== Bloqueo de mundo ====== */
+/* ====== Cada mundo ====== */
+.mundo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: transform 0.25s ease;
+}
+
+.mundo h2 {
+    color: #fff;
+    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.8);
+    margin-bottom: 8px;
+}
+
+/* ====== Imagen del mundo ====== */
+.imagen-mundo {
+    width: 40vw;
+    max-width: 500px;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 4px solid transparent;
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.35);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.mundo:hover .imagen-mundo:not(.bloqueada) {
+    transform: scale(1.05);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.45);
+    border-color: #d10d0de4;
+}
+
+/* ====== Imagen bloqueada ====== */
+.imagen-mundo.bloqueada {
+    filter: brightness(0.35) grayscale(0.85);
+}
+
+/* ====== Overlay de bloqueo ====== */
 .overlay-bloqueo {
     position: relative;
     display: inline-block;
-}
-
-.imagen-mundo.bloqueada {
-    filter: brightness(0.35) grayscale(0.85);
 }
 
 .bloqueo-info {
@@ -246,7 +150,6 @@ body > div {
     font-size: 1rem;
     border-radius: 12px;
     text-align: center;
-    letter-spacing: 0.5px;
     backdrop-filter: blur(2px);
 }
 
@@ -255,19 +158,25 @@ body > div {
     margin-bottom: 6px;
 }
 
-/* ====== Ajustes responsive ====== */
+/* ====== Responsivo ====== */
 @media (max-width: 900px) {
     .menu-mundos {
         flex-direction: column;
-        gap: 30px;
+        gap: 40px;
     }
 
     .imagen-mundo {
-        width: 300px;
-        height: 180px;
+        width: 80vw;
+        max-width: none;
     }
 
     .bloqueo-info {
         font-size: 0.9rem;
+    }
+
+    .btn-volver {
+        font-size: 1rem;
+        top: 16px;
+        left: 16px;
     }
 }

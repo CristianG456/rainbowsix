@@ -73,9 +73,13 @@ if (isset($_POST['cerrar'])) {
 </head>
 
 <body>
-    <video autoplay muted loop playsinline class="video-fondo">
-        <source src="../../controller/img/animacion2.mp4" type="video/mp4">
-    </video>
+    <div class="video-fondo">
+            <iframe
+                src="https://www.youtube-nocookie.com/embed/lo2Hw4TSvls?autoplay=1&mute=1&loop=1&playlist=lo2Hw4TSvls&controls=0&rel=0&modestbranding=1"
+                allow="autoplay; fullscreen">
+            </iframe>
+    </div>
+
 
     <div class="contenedor">
         <h1>Rainbow Six</h1>
