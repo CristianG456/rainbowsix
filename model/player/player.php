@@ -136,7 +136,7 @@ if (isset($_POST['cerrar'])) {
                 <?php endif; ?>
             </div>
 
-            <!-- ✅ Aquí se inserta el logo -->
+            <!--  Aquí se inserta el logo -->
             <img src="../../controller/img/logo.png" alt="Logo del juego" class="logo">
         </div>
     </div>

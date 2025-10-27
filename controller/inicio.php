@@ -48,7 +48,7 @@ if (isset($_POST["iniciar"])) {
     $stmt->execute([$fila['id_usuario']]);
 
     // Bloquear si el usuario está inactivo/bloqueado
-    if ($_SESSION['rol'] == 2 && $_SESSION['estado'] == 2) {
+    if ($_SESSION['rol'] == 2 && $_SESSION['estado'] == 100) {
         echo "<script>
             alert('Tu cuenta está bloqueada. Espera a que el administrador la active.');
             window.location='../iniciosesion.php';
