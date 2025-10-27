@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 27-10-2025 a las 04:29:52
+-- Tiempo de generación: 27-10-2025 a las 15:49:26
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -43,13 +43,13 @@ CREATE TABLE `armas` (
 --
 
 INSERT INTO `armas` (`id_arma`, `nomb_arma`, `dano_cabeza`, `dano_torso`, `id_tipo_arma`, `cant_balas`, `img_arma`, `id_nivel_arma`) VALUES
-(1, 'Puño', 10, 5, 1, NULL, '\"C:\\xampp\\htdocs\\rainbowsix\\controller\\img\\puño.jpg\"', 1),
-(2, 'Cuchillo', 10, 5, 1, NULL, '\"C:\\xampp\\htdocs\\rainbowsix\\controller\\img\\cuchillo.png\"', 1),
-(3, 'Pistola', 20, 10, 1, 15, '\"C:\\xampp\\htdocs\\rainbowsix\\controller\\img\\pistola.png\"', 2),
-(4, 'Subfusil', 20, 10, 2, 30, '\"C:\\xampp\\htdocs\\rainbowsix\\controller\\img\\SUBFUSIL.png\"', 2),
-(5, 'Fusil de asalto', 25, 15, 3, 30, '\"C:\\xampp\\htdocs\\rainbowsix\\controller\\img\\fusilasalto.png\"', 3),
-(6, 'Escopeta', 25, 15, 2, 8, '\"C:\\xampp\\htdocs\\rainbowsix\\controller\\img\\escopeta.png\"', 3),
-(7, 'Franco', 40, 25, 3, 5, '\"C:\\xampp\\htdocs\\rainbowsix\\controller\\img\\franco.png\"', 4);
+(1, 'Puño', 10, 5, 1, NULL, 'puño.jpg', 1),
+(2, 'Cuchillo', 10, 5, 1, NULL, 'cuchillo.png', 1),
+(3, 'Pistola', 20, 10, 1, 15, 'pistola.png', 2),
+(4, 'Subfusil', 20, 10, 2, 30, 'SUBFUSIL.png', 2),
+(5, 'Fusil de asalto', 25, 15, 3, 30, 'fusilasalto.png', 3),
+(6, 'Escopeta', 25, 15, 2, 8, 'escopeta.png', 3),
+(7, 'Franco', 40, 25, 3, 5, 'franco.png', 4);
 
 -- --------------------------------------------------------
 
@@ -88,6 +88,13 @@ CREATE TABLE `detalle_usuario_partida` (
   `id_partida` int(11) NOT NULL,
   `id_arma` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `detalle_usuario_partida`
+--
+
+INSERT INTO `detalle_usuario_partida` (`id_usuario_partida`, `puntos_total`, `id_usuario1`, `id_usuario2`, `id_partida`, `id_arma`) VALUES
+(144, 0, 3, NULL, 10, NULL);
 
 -- --------------------------------------------------------
 
@@ -172,6 +179,22 @@ CREATE TABLE `partida` (
   `id_ganador` int(10) DEFAULT NULL,
   `inicio_cuenta_regresiva` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `partida`
+--
+
+INSERT INTO `partida` (`id_partida`, `fecha_inicio`, `fecha_fin`, `cantidad_jug`, `id_estado_part`, `id_sala`, `id_ganador`, `inicio_cuenta_regresiva`) VALUES
+(1, '2025-10-27 01:57:22', '0000-00-00 00:00:00', 1, 5, 1, NULL, '2025-10-27 01:58:05'),
+(2, '2025-10-27 01:57:22', '0000-00-00 00:00:00', 0, 1, 1, NULL, NULL),
+(3, '2025-10-27 09:46:41', '2025-10-27 09:47:27', 0, 4, 1, NULL, NULL),
+(4, '2025-10-27 09:47:46', '2025-10-27 09:48:23', 0, 4, 3, NULL, '2025-10-27 09:48:23'),
+(5, '2025-10-27 09:47:46', '0000-00-00 00:00:00', 0, 1, 3, NULL, NULL),
+(6, '2025-10-27 09:48:23', '0000-00-00 00:00:00', 0, 3, 3, NULL, '2025-10-27 09:48:23'),
+(7, '2025-10-27 09:48:23', '0000-00-00 00:00:00', 0, 5, 3, NULL, '2025-10-27 09:48:23'),
+(8, '2025-10-27 09:48:24', '2025-10-27 09:48:39', 0, 4, 2, NULL, '2025-10-27 09:48:33'),
+(9, '2025-10-27 09:48:25', '0000-00-00 00:00:00', 0, 1, 2, NULL, NULL),
+(10, '2025-10-27 09:48:39', '0000-00-00 00:00:00', 1, 5, 2, NULL, '2025-10-27 09:48:41');
 
 -- --------------------------------------------------------
 
@@ -269,12 +292,12 @@ CREATE TABLE `usuario` (
 --
 
 INSERT INTO `usuario` (`id_usuario`, `nomb_usu`, `contra_usu`, `correo`, `vida`, `puntos`, `ultimo_ingreso`, `id_avatar`, `id_rol`, `id_nivel`, `id_estado_usu`, `ultima_actividad`) VALUES
-(3, 'kevin1', '$2y$05$fSw5EsGzaKGmxvFW0U1v4.IoyUmxgLQ2BJhaPtBN69LAPzwMhS0y6', 'prueba1@gmail.com', 200, 5310, '2025-09-29 23:42:11', 3, 2, 4, 1, '2025-10-26 22:13:03'),
-(4, 'kevin2', '$2y$05$CAogpD6U6PNmLJ5UyFQBAe7psQ2G04NRw3A2jnHFe4Q7XalCLy/1u', 'prueba@gmail.com', 200, 3980, '2025-09-29 23:49:00', 1, 2, 4, 1, '2025-10-26 22:13:03'),
+(3, 'kevin1', '$2y$05$fSw5EsGzaKGmxvFW0U1v4.IoyUmxgLQ2BJhaPtBN69LAPzwMhS0y6', 'prueba1@gmail.com', 200, 5310, '2025-09-29 23:42:11', 2, 2, 4, 1, '2025-10-27 09:48:43'),
+(4, 'kevin2', '$2y$05$CAogpD6U6PNmLJ5UyFQBAe7psQ2G04NRw3A2jnHFe4Q7XalCLy/1u', 'prueba@gmail.com', 200, 3980, '2025-09-29 23:49:00', 1, 2, 4, 1, '2025-10-27 01:59:25'),
 (5, 'admin1', '$2y$05$tev8R65QSkIbN/Q9mCrqGua9U5ETvGkwm8SYYJLl4ivbCniMjf22G', 'admin1@gmail.com', 200, 0, '2025-09-30 00:10:35', NULL, 1, 1, 2, '2025-10-26 22:13:03'),
 (6, 'admin2', '$2y$05$S7rJ1au/Ixbit.d5j/.fq.MPv63ln6fU7hlym56wWGr3F3U4eeKkm', 'admin2@gmail.com', 200, 0, '2025-09-30 00:10:46', NULL, 1, 1, 2, '2025-10-26 22:13:03'),
 (7, 'Cronos', '$2y$05$AoCXnC9gW2p3ZnMxZ0p.ku5HAqEaaDQIx/BAai8aScYgs7qIkUbtm', 'cristiancronos123@gmail.com', 200, 510, '2025-09-30 16:55:35', 3, 2, 2, 1, '2025-10-26 22:13:03'),
-(8, 'kevin3', '$2y$05$rG8RY0XSWd3m1QC.EkyH7O.KlOMY0RTYw7/eJ2G2J6UR5Wp1HCu7u', 'prueba33@gmail.com', 200, 0, '2025-10-08 22:58:05', 1, 2, 1, 1, '2025-10-26 22:13:03'),
+(8, 'kevin3', '$2y$05$rG8RY0XSWd3m1QC.EkyH7O.KlOMY0RTYw7/eJ2G2J6UR5Wp1HCu7u', 'prueba33@gmail.com', 200, 0, '2025-10-08 22:58:05', 1, 2, 1, 1, '2025-10-27 09:48:39'),
 (9, 'daniel1', '$2y$05$7jYnXBc3GnazRSpgiYOdf.zYmYYHvWKufWN375FRklsm02t03lyX6', 'daniel@gmail.com', 200, 0, '2025-10-18 01:02:05', NULL, 2, 1, 2, '2025-10-26 22:13:03');
 
 --
@@ -384,7 +407,7 @@ ALTER TABLE `avatar`
 -- AUTO_INCREMENT de la tabla `detalle_usuario_partida`
 --
 ALTER TABLE `detalle_usuario_partida`
-  MODIFY `id_usuario_partida` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_usuario_partida` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=145;
 
 --
 -- AUTO_INCREMENT de la tabla `estado`
@@ -408,7 +431,7 @@ ALTER TABLE `nivel`
 -- AUTO_INCREMENT de la tabla `partida`
 --
 ALTER TABLE `partida`
-  MODIFY `id_partida` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_partida` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de la tabla `rol`
