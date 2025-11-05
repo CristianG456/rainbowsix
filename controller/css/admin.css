@@ -1,0 +1,163 @@
+body {
+    background-image: url('../../controller/img/buscar.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    margin: 0;
+    padding: 0;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    overflow-x: hidden;
+}
+
+.custom-navbar {
+    background: linear-gradient(90deg, #0f0f0f, #1c1c1c, #111);
+    padding: 0.8rem 1rem;
+    transition: all 0.3s ease-in-out;
+}
+
+.custom-navbar .navbar-brand {
+    font-size: 1.8rem;
+    color: #fff !important;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+}
+
+.logo-navbar {
+    width: 45px;
+    height: 45px;
+    margin-right: 10px;
+    border-radius: 50%;
+    border: 2px solid;
+}
+
+.custom-navbar .nav-link:hover {
+    color: #dc3545 !important;
+    transform: scale(1.05);
+}
+
+.juega-btn {
+    background-color: #dc3545;
+    border-radius: 25px;
+    transition: all 0.3s ease-in-out;
+    white-space: nowrap;
+    font-size: 1rem;
+    padding: 0.6rem 1.4rem;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+}
+
+.juega-btn:hover {
+    background-color: #b52a38;
+    transform: scale(1.08);
+}
+
+.admin-title {
+    margin-top: 90px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 20px 0;
+}
+
+.admin-title h1 {
+    font-size: 4rem;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.95);
+    font-weight: 900;
+    margin: 0;
+    font-family: 'Montserrat', sans-serif;
+    text-shadow: 2px 2px 5px rgba(0,0,0,0.7);
+}
+
+.bloques-container {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.usuarios-bloque {
+    text-align: center;
+    flex: 0 1 400px;
+    margin: 20px;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 15px;
+    backdrop-filter: blur(5px);
+    transition: transform 0.3s ease-in-out;
+}
+
+.usuarios-bloque:hover {
+    transform: translateY(-5px);
+}
+
+.usuarios-contenido {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.usuarios-text {
+    font-size: 2.2rem;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.95);
+    font-weight: bold;
+    font-family: 'Montserrat', sans-serif;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 15px 0;
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+.usuarios-img {
+    width: 260px;
+    height: 300px;
+    border-radius: 50%;
+    border: 3px solid rgba(0, 0, 0, 0.85);
+    display: block;
+    margin: 0 auto;
+    box-shadow: 0px 4px 12px rgba(0,0,0,0.6);
+    transition: transform 0.3s ease-in-out;
+}
+
+.usuarios-img:hover {
+    transform: scale(1.05);
+}
+
+.links-header {
+  display: flex;
+  gap: 100px;
+  margin-right: 40px;
+}
+
+.links-header a {
+  text-decoration: none;
+  color: white;
+  font-weight: bold;
+}
+
+.links-header a:hover {
+  color: #dc3545;
+}
+
+.modal-content-light {
+    background-color: #fff;     
+    color: #212529;             
+}
+.modal-content-light .form-control {
+    background-color: #fff; 
+    color: #212529;
+}
+.modal-content-light select {
+    background-color: #fff;
+    color: #212529;
+}

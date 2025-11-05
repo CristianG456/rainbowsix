@@ -1,0 +1,223 @@
+/* ======= CONFIGURACIÓN GENERAL ======= */
+body {
+    background-color: #000;
+    color: #fff;
+    margin: 0;
+    padding: 0;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    overflow: hidden;
+    position: relative;
+}
+
+/* ======= VIDEO DE FONDO ======= */
+.video-fondo iframe {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border: none;
+    z-index: -1;
+    opacity: 0.9;
+}
+
+/* ======= ENCABEZADO Y MENÚ ======= */
+.header {
+    position: absolute;
+    top: 20px;
+    left: 30px;
+    display: flex;
+    align-items: center;
+    z-index: 50;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 2.8rem;
+    color: #fff;
+    letter-spacing: 2px;
+    margin-right: 40px;
+}
+
+.menu {
+    display: flex;
+    align-items: center;
+}
+
+.menu a {
+    color: #fff;
+    text-decoration: none;
+    margin: 0 20px;
+    font-size: 1.2rem;
+    transition: color 0.3s;
+}
+
+.menu a:hover {
+    color: #ffd700;
+}
+
+/* ======= CONTENEDOR PRINCIPAL ======= */
+.juego-container {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+}
+
+/* ======= CONTENEDOR DE PERSONAJE (MEJORADO Y AUTOAJUSTABLE) ======= */
+.mifig-container {
+    position: absolute;
+    bottom: 45px;
+    left: 80px;
+    width: 260px; /* Tamaño base del contenedor */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 20px 10px 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    box-shadow: 0 0 25px rgba(255, 215, 0, 0.15);
+    overflow: hidden; /* 🔹 Evita que el personaje se salga */
+    transition: all 0.4s ease;
+    backdrop-filter: blur(4px);
+    z-index: 10;
+    pointer-events: none; /* No bloquea clics del menú */
+}
+
+/* Permitir interacción solo dentro */
+.mifig-container img,
+.enlace-personaje {
+    pointer-events: auto;
+}
+
+/* Efecto dorado al pasar */
+.mifig-container:hover {
+    box-shadow: 0 0 40px rgba(255, 215, 0, 0.6);
+    transform: scale(1.03);
+}
+
+/* Imagen del personaje (ajustable y centrada) */
+.personaje,
+.personaje1 {
+    width: 100%;
+    height: auto;
+    max-height: 100%; /* 🔹 Se adapta automáticamente */
+    object-fit: contain;
+    object-position: bottom;
+    display: block;
+    filter: drop-shadow(0 0 18px rgba(255, 215, 0, 0.5));
+    transform: scale(1); /* 🔹 Ligeramente más grande, sin salirse */
+}
+
+/* Animación de flotación suave */
+@keyframes idleFloat {
+    0%, 100% { transform: translateY(0) scale(1.05); }
+    50% { transform: translateY(-8px) scale(1.05); }
+}
+
+/* ======= TEXTO DE SELECCIÓN DE PERSONAJE ======= */
+.enlace-personaje {
+    margin-top: 30px;
+    color: #ffd700;
+    font-weight: bold;
+    text-decoration: none;
+    font-size: 1.1rem;
+    text-shadow: 0 0 8px rgba(255, 215, 0, 0.7);
+    transition: all 0.3s ease;
+}
+.enlace-personaje:hover {
+    text-shadow: 0 0 18px rgba(255, 215, 0, 1);
+    color: #fff;
+    transform: scale(1.05);
+}
+
+/* ======= PANEL DE USUARIO (DERECHA) ======= */
+.puntos {
+    position: absolute;
+    top: 20px;
+    right: 35px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 25px;
+    border-radius: 20px;
+    background: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 0 25px rgba(255, 215, 0, 0.25);
+    text-align: center;
+    width: 230px;
+    z-index: 10;
+}
+
+/* Avatar redondo con efecto */
+.avatar-usuario {
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid gold;
+    box-shadow: 0 0 25px rgba(255, 215, 0, 0.4);
+    margin-bottom: 12px;
+}
+
+/* Nombre del usuario */
+.nombre-usuario {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #ffd700;
+    text-shadow: 0 0 8px rgba(255, 215, 0, 0.3);
+    margin-bottom: 5px;
+}
+
+/* Nivel */
+.nivel {
+    font-size: 1rem;
+    color: #f1f1f1;
+    margin-bottom: 5px;
+}
+
+/* Icono del rango */
+.icono-rango {
+    width: 45px;
+    height: 45px;
+    margin: 8px 0;
+}
+
+/* ======= BARRA DE PROGRESO ======= */
+.progress-bar {
+    width: 170px;
+    height: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 8px auto;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, gold, orange);
+    border-radius: 10px;
+    transition: width 1s ease-in-out;
+}
+
+/* ======= BOTÓN DE CERRAR SESIÓN ======= */
+.cerrar-sesion-btn {
+    background-color: #dc3545;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    font-weight: bold;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color .3s ease, transform .1s ease;
+    margin-top: 10px;
+}
+.cerrar-sesion-btn:hover {
+    background-color: #c82333;
+}
+.cerrar-sesion-btn:active {
+    transform: scale(.97);
+}

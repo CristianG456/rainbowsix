@@ -1,0 +1,161 @@
+html, body{
+    height: 100%;
+}
+
+body {
+    background-image: url('../../controller/img/agentes.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    color: #f4f4f4;
+}
+
+.contenedor {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 25px;
+    justify-content: center;
+    padding: 20px;
+}
+
+/* Personaje */
+.personaje {
+    width: 200px;
+    margin-top: 50px;
+    text-align: center;
+    background: rgba(129, 100, 49, 0.651);
+    color: #fff;
+    border-radius: 15px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+    padding: 15px;
+    position: relative;
+    transition: all 0.3s ease; /* transición suave para hover */
+    border: 2px solid transparent; /* sin borde al inicio */
+}
+
+/* Efecto hover: agranda y aplica borde dorado brillante */
+.personaje:hover {
+    transform: scale(1.1);
+    border: 2px solid gold;
+    box-shadow: 0 0 15px gold, 0 0 30px rgba(255, 215, 0, 0.6);
+}
+
+/* Imagen dentro del personaje */
+.personaje img {
+    width: 100%;
+    height: 200px;
+    object-fit: contain;
+    border-radius: 10px;
+    transition: transform 0.3s ease; /* para animar zoom de la imagen */
+}
+
+/* Imagen crece un poco al pasar el hover */
+.personaje:hover img {
+    transform: scale(1.02);
+}
+
+/* Títulos dentro de personaje */
+.personaje h3 {
+    margin: 10px 0 5px;
+    color: #ffd700;
+    transition: color 0.3s ease;
+}
+
+/* Texto de descripción */
+.personaje p {
+    font-size: 14px;
+    color: #ccc;
+    transition: color 0.3s ease;
+}
+
+/* Opcional: cambiar color del texto al hover */
+.personaje:hover h3,
+.personaje:hover p {
+    color: #fff;
+}
+
+/* Segundo contenedor (si usas otro) */
+.contenedor2 {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 25px;
+    justify-content: center;
+    padding: 20px;
+}
+
+@media (max-width: 600px) {
+    .armas-wrapper {
+        padding: 12px;
+        gap: 12px;
+    }
+
+    .arma img {
+        width: 90px;
+    }
+
+    .arma p {
+        font-size: 0.9rem;
+    }
+}
+
+.page-title-armamento {
+    font-size: 4rem;
+    margin: 0;
+    position: absolute;
+    top: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    z-index: 3;
+    color: #ffd700;
+    white-space: nowrap;
+}
+
+@media (max-width: 800px) {
+    .page-title-armamento {
+        font-size: 2.2rem;
+        top: 26px;
+    }
+}
+
+/* Botón texto 'Volver' - sin fondo, texto blanco, hover rojo */
+.btn-volver {
+    color: #fff;
+    text-decoration: none;
+    font-weight: 900;
+    font-size: 1.1rem;
+    padding: 6px 8px; /* espacio clicable sin fondo */
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    transition: color 0.15s ease, transform 0.08s ease;
+    position: absolute;
+    top: 18px;
+    left: 30px;
+    z-index: 4;
+}
+
+.btn-volver:hover {
+    color: #d30000;
+    transform: translateY(-2px);
+}
+
+@media (max-width: 600px) {
+    .btn-volver {
+        font-size: 1rem;
+        top: 26px;
+        left: 16px;
+    }
+}
+
+@media (max-width: 800px) {
+    .contenedor>h2 {
+        font-size: 2.2rem;
+    }
+}
